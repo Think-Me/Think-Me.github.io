@@ -1,0 +1,315 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>nginx配置SSL双向认证【客户端认证】 | Eber的小窝</title><meta name="author" content="eber"><meta name="copyright" content="eber"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="nginx客户端认证">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx配置SSL双向认证【客户端认证】">
+<meta property="og:url" content="https://eber.vip/post/2021/11/15/55508/index.html">
+<meta property="og:site_name" content="Eber的小窝">
+<meta property="og:description" content="nginx客户端认证">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://up.eber.vip/Think-Me/img/main/upload/nginx.png">
+<meta property="article:published_time" content="2021-11-15T03:01:25.000Z">
+<meta property="article:modified_time" content="2023-06-30T08:12:20.046Z">
+<meta property="article:author" content="eber">
+<meta property="article:tag" content="Nginx">
+<meta property="article:tag" content="SSL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://up.eber.vip/Think-Me/img/main/upload/nginx.png"><link rel="shortcut icon" href="https://up.eber.vip/Think-Me/img/main/static/favicon.ico"><link rel="canonical" href="https://eber.vip/post/2021/11/15/55508/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><meta name="baidu-site-verification" content="codeva-RpsHAjsfoN"/><link rel="stylesheet" href="https://up.eber.vip/Think-Me/img/main/static/css/index.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.15/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-8820737714769485',
+  enable_page_level_ads: 'true'
+});</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0d87231a10d73d7b43ff2dc95037cb9d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-BWSGWCECKH"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-BWSGWCECKH');
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.bootcdn.net/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.js',
+      css: 'https://cdn.bootcdn.net/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'nginx配置SSL双向认证【客户端认证】',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-06-30 16:12:20'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://up.eber.vip/Think-Me/img/main/logo/eber.vip-modified.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Eber的小窝"><span class="site-name">Eber的小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">nginx配置SSL双向认证【客户端认证】</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-15T03:01:25.000Z" title="发表于 2021-11-15 11:01:25">2021-11-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-06-30T08:12:20.046Z" title="更新于 2023-06-30 16:12:20">2023-06-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%AE%89%E5%85%A8%E4%B8%8E%E8%BF%90%E7%BB%B4/">安全与运维</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title="nginx配置SSL双向认证【客户端认证】"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/2021/11/15/55508/#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="post-content" id="article-container"><h2 id="SSL双向认证"><a href="#SSL双向认证" class="headerlink" title="SSL双向认证"></a>SSL双向认证</h2><p>绝大多数SSL应用都以单向认证为主，即客户端只要信任服务端，就可以使用服务端的公钥加密后向服务端发起请求，由服务端的私钥解密之后获得请求数据。</p>
+<p>如果这个过程反过来，让服务端信任客户端，服务端使用客户端的公钥加密之后将数据返回给客户端，其实也是可以做到的，原理和实现跟单向认证都差不多。</p>
+<p>服务端信任客户端的操作往往也会伴随着客户端认证服务端的过程，所以让服务端信任客户端的SSL认证方式往往也被称为SSL双向认证，并且要配置SSL双向认证必须先开启服务端SSL，先配置客户端信任服务端。</p>
+<h2 id="Nginx的SSL双向认证配置"><a href="#Nginx的SSL双向认证配置" class="headerlink" title="Nginx的SSL双向认证配置"></a>Nginx的SSL双向认证配置</h2><h2 id="第一步-开启https访问【服务端证书不一定必须是和客户端是同一CA签发的证书，所以可以用CA机构的正规可信证书】"><a href="#第一步-开启https访问【服务端证书不一定必须是和客户端是同一CA签发的证书，所以可以用CA机构的正规可信证书】" class="headerlink" title="第一步 开启https访问【服务端证书不一定必须是和客户端是同一CA签发的证书，所以可以用CA机构的正规可信证书】"></a>第一步 开启https访问【服务端证书不一定必须是和客户端是同一CA签发的证书，所以可以用CA机构的正规可信证书】</h2><p>根据理论知识，我们必须先开启Nginx的SSL配置，即启用https。这个过程较为简单，目前比较好用的就是亚洲诚信这种免费一年的证书方案。申请免费证书的过程略过，直接贴启用https的配置:【let’s encrypt这个免费证书方案不推荐使用，因为苹果设备会强制进行OCSP校验但是let’s encrypt的OCSP服务在国内访问很慢或者是完全不能访问，所以会造成苹果设备无法打开我们的网站或者是响应慢。】</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line">  listen [::]:80;</span><br><span class="line">  listen 443 ssl http2;</span><br><span class="line">  listen [::]:443 ssl http2;</span><br><span class="line">  server_name example.com;</span><br><span class="line">  ssl_certificate /usr/local/openresty/nginx/conf/ssl/example.com_chain.crt;</span><br><span class="line">  ssl_certificate_key /usr/local/openresty/nginx/conf/ssl/example.com_key.key;</span><br><span class="line">  ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;</span><br><span class="line">  ssl_ciphers TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;</span><br><span class="line">  ssl_prefer_server_ciphers on;</span><br><span class="line">  ssl_session_timeout 10m;</span><br><span class="line">  ssl_session_cache builtin:1000 shared:SSL:10m;</span><br><span class="line">  ssl_buffer_size 1400;</span><br><span class="line">  add_header Strict-Transport-Security max-age=15768000;</span><br><span class="line">  ssl_stapling on;</span><br><span class="line">  ssl_stapling_verify on;</span><br><span class="line">  access_log /data/wwwlogs/example.com_nginx.log combined;</span><br><span class="line">  if ($ssl_protocol = &quot;&quot;) &#123; return 301 https://$host$request_uri; &#125;</span><br><span class="line"></span><br><span class="line">  location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|flv|mp4|ico)$ &#123;</span><br><span class="line">    proxy_pass http://10.0.5.1:5000;</span><br><span class="line">    include proxy.conf;</span><br><span class="line">    expires 30d;</span><br><span class="line">    access_log off;</span><br><span class="line">  &#125;</span><br><span class="line">  location ~ .*\.(js|css)?$ &#123;</span><br><span class="line">    proxy_pass http://10.0.5.1:5000;</span><br><span class="line">    include proxy.conf;</span><br><span class="line">    expires 7d;</span><br><span class="line">    access_log off;</span><br><span class="line">  &#125;</span><br><span class="line">  location ~ /(\.user\.ini|\.ht|\.git|\.svn|\.project|LICENSE|README\.md) &#123;</span><br><span class="line">    deny all;</span><br><span class="line">  &#125;</span><br><span class="line">  location / &#123;</span><br><span class="line">    proxy_pass http://10.0.5.1:5000;</span><br><span class="line">    include proxy.conf;</span><br><span class="line">  &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>特别注意<code>if ($ssl_protocol = &quot;&quot;) &#123; return 301 https://$host$request_uri; &#125;</code>，我们的目的是SSL双向认证，不走https无任何意义，所以必须强制跳转https。</p>
+<h2 id="第二步-生成客户端证书并签证-脚本"><a href="#第二步-生成客户端证书并签证-脚本" class="headerlink" title="第二步 生成客户端证书并签证(脚本)"></a>第二步 生成客户端证书并签证(脚本)</h2><p>这个过程详细描述的文章太多了，这里就不啰嗦介绍openssl和签证过程了，本篇内容是快速生成双向认证配置的证书，所以直接贴脚本就行了，命令都是参考互联网上各种openssl双向配置文档，在此基础之上进行了命令上的简化与非交互式的支持。</p>
+<p>整个目录结构如图:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># tree /usr/local/openresty/nginx/conf/ssl/</span><br><span class="line">/usr/local/openresty/nginx/conf/ssl/</span><br><span class="line">├── create_ca_cert.sh</span><br><span class="line">├── create_client_cert.sh</span><br><span class="line">├── revoke_cert.sh</span><br><span class="line"></span><br><span class="line">0 directories, 3 files </span><br></pre></td></tr></table></figure>
+
+<p>自行创建<code>/etc/nginx/ssl_certs/</code>，放入三个脚本，分别用于生成CA证书以及CA目录(<code>create_ca_cert.sh</code>脚本的作用，只有第一次需要运行)，创建客户端证书，并用CA证书签证(<code>create_client_cert.sh</code>脚本的作用，必须先生成CA证书)，<code>revoke_cert.sh</code>脚本用于吊销证书，需要收回权限的时候可以使用。</p>
+<p>每个脚本内容如下:</p>
+<ul>
+<li><code>create_ca_cert.sh</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/bash -e</span><br><span class="line"></span><br><span class="line"># 创建CA根证书</span><br><span class="line"># 非交互式方式创建以下内容:</span><br><span class="line"># 国家名(2个字母的代号)</span><br><span class="line">C=CN</span><br><span class="line"># 省</span><br><span class="line">ST=Shannxi</span><br><span class="line"># 市</span><br><span class="line">L=Xian</span><br><span class="line"># 公司名</span><br><span class="line">O=My Company</span><br><span class="line"># 组织或部门名</span><br><span class="line">OU=技术部</span><br><span class="line"># 服务器FQDN或颁发者名</span><br><span class="line">CN=www.example.com</span><br><span class="line"># 邮箱地址</span><br><span class="line">emailAddress=admin@example.com</span><br><span class="line"></span><br><span class="line">mkdir -p ./demoCA/&#123;private,newcerts&#125;</span><br><span class="line">touch ./demoCA/index.txt</span><br><span class="line">[ ! -f ./demoCA/seria ] &amp;&amp; echo 01 &gt; ./demoCA/serial</span><br><span class="line">[ ! -f ./demoCA/crlnumber ] &amp;&amp; echo 01 &gt; ./demoCA/crlnumber</span><br><span class="line">[ ! -f ./demoCA/cacert.pem ] &amp;&amp; openssl req -utf8 -new -x509 -days 36500 -newkey rsa:2048 -nodes -keyout ./demoCA/private/cakey.pem -out ./demoCA/cacert.pem -subj &quot;/C=$&#123;C&#125;/ST=$&#123;ST&#125;/L=$&#123;L&#125;/O=$&#123;O&#125;/OU=$&#123;OU&#125;/CN=$&#123;CN&#125;/emailAddress=$&#123;emailAddress&#125;&quot;</span><br><span class="line">[ ! -f ./demoCA/private/ca.crl ] &amp;&amp; openssl ca -crldays 36500 -gencrl -out &quot;./demoCA/private/ca.crl&quot; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>create_client_cert.sh</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/bash -e</span><br><span class="line"></span><br><span class="line">show_help() &#123;</span><br><span class="line">    echo &quot;$0 [-h|-?|--help] [--ou ou] [--cn cn] [--email email]&quot;</span><br><span class="line">    echo &quot;-h|-?|--help    显示帮助&quot;</span><br><span class="line">    echo &quot;--ou            设置组织或部门名，如: 技术部&quot;</span><br><span class="line">    echo &quot;--cn            设置FQDN或所有者名，如: 冯宇&quot;</span><br><span class="line">    echo &quot;--email         设置FQDN或所有者邮件，如: fengyu@example.com&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">while [[ $# -gt 0 ]]</span><br><span class="line">do</span><br><span class="line">    case $1 in</span><br><span class="line">        -h|-\?|--help)</span><br><span class="line">            show_help</span><br><span class="line">            exit 0</span><br><span class="line">            ;;</span><br><span class="line">        --ou)</span><br><span class="line">            OU=&quot;$&#123;2&#125;&quot;</span><br><span class="line">            shift</span><br><span class="line">            ;;        </span><br><span class="line">        --cn)</span><br><span class="line">            CN=&quot;$&#123;2&#125;&quot;            </span><br><span class="line">            shift</span><br><span class="line">            ;;</span><br><span class="line">        --email)</span><br><span class="line">            emailAddress=&quot;$&#123;2&#125;&quot;            </span><br><span class="line">            shift</span><br><span class="line">            ;;</span><br><span class="line">        --)</span><br><span class="line">            shift</span><br><span class="line">            break</span><br><span class="line">        ;;</span><br><span class="line">        *)</span><br><span class="line">            echo -e &quot;Error: $0 invalid option &#x27;$1&#x27;\nTry &#x27;$0 --help&#x27; for more information.\n&quot; &gt;&amp;2</span><br><span class="line">            exit 1</span><br><span class="line">        ;;</span><br><span class="line">    esac</span><br><span class="line">shift</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line"># 创建客户端证书</span><br><span class="line"># 非交互式方式创建以下内容:</span><br><span class="line"># 国家名(2个字母的代号)</span><br><span class="line">C=CN</span><br><span class="line"># 省</span><br><span class="line">ST=Shannxi</span><br><span class="line"># 市</span><br><span class="line">L=Xian</span><br><span class="line"># 公司名</span><br><span class="line">O=My Company</span><br><span class="line"># 组织或部门名</span><br><span class="line">OU=$&#123;OU:-测试部门&#125;</span><br><span class="line"># 服务器FQDN或授予者名</span><br><span class="line">CN=$&#123;CN:-demo&#125;</span><br><span class="line"># 邮箱地址</span><br><span class="line">emailAddress=$&#123;emailAddress:-demo@example.com&#125;</span><br><span class="line"></span><br><span class="line">mkdir -p &quot;$&#123;CN&#125;&quot;</span><br><span class="line"></span><br><span class="line">[ ! -f &quot;$&#123;CN&#125;/$&#123;CN&#125;.key&quot; ] &amp;&amp; openssl req -utf8 -nodes -newkey rsa:2048 -keyout &quot;$&#123;CN&#125;/$&#123;CN&#125;.key&quot; -new -days 36500 -out &quot;$&#123;CN&#125;/$&#123;CN&#125;.csr&quot; -subj &quot;/C=$&#123;C&#125;/ST=$&#123;ST&#125;/L=$&#123;L&#125;/O=$&#123;O&#125;/OU=$&#123;OU&#125;/CN=$&#123;CN&#125;/emailAddress=$&#123;emailAddress&#125;&quot;</span><br><span class="line">[ ! -f &quot;$&#123;CN&#125;/$&#123;CN&#125;.crt&quot; ] &amp;&amp; openssl ca -utf8 -batch -days 36500 -in &quot;$&#123;CN&#125;/$&#123;CN&#125;.csr&quot; -out &quot;$&#123;CN&#125;/$&#123;CN&#125;.crt&quot;</span><br><span class="line">[ ! -f &quot;$&#123;CN&#125;/$&#123;CN&#125;.p12&quot; ] &amp;&amp; openssl pkcs12 -export -clcerts -CApath ./demoCA/ -inkey &quot;$&#123;CN&#125;/$&#123;CN&#125;.key&quot; -in &quot;$&#123;CN&#125;/$&#123;CN&#125;.crt&quot; -certfile &quot;./demoCA/cacert.pem&quot; -passout pass: -out &quot;$&#123;CN&#125;/$&#123;CN&#125;.p12&quot; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>revoke_cert.sh</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/bin/bash -e</span><br><span class="line"></span><br><span class="line"># 吊销一个签证过的证书</span><br><span class="line"></span><br><span class="line">openssl ca -revoke &quot;$&#123;1&#125;/$&#123;1&#125;.crt&quot;</span><br><span class="line">openssl ca -gencrl -out &quot;./demoCA/private/ca.crl&quot; </span><br></pre></td></tr></table></figure>
+
+<p>简单分析一波脚本，首先是创建CA，对于Ubuntu系统来说，<code>/etc/ssl/openssl.cnf</code>配置中默认的CA路径就是<code>./demoCA</code>，为了不改动默认配置，直接按照默认配置的内容创建这些目录和文件即可。还有就是openssl子命令非常多，但是也和git一样，可以合并命令，比如用一条命令同时生成私钥和签证请求<code>openssl req -nodes -newkey rsa:2048 -keyout client.key -new -out client.csr</code>，在<code>req</code>的同时就做了<code>genrsa</code>。由于创建CA脚本只是第一次运行需要，因此把证书配置直接写死在脚本中就完事了。</p>
+<p>接下来是创建客户端证书，为了简化用户的使用，在服务端帮助用户生成证书并签证，把签证过的证书下发给用户就可以了。由于用户可能是不同部门，不同姓名，不同邮件地址，因此将这三个参数外部化，做一下参数解析，加上友好的命令行提示防止遗忘。这个脚本特别注意最后一行，会生成一个<code>PKCS12</code>格式的证书。openssl默认产生的证书格式都是<code>PEM</code>的，会将公钥和私钥分开，但是浏览器导入的时候需要将这些内容合并起来形成<code>证书链</code>，所以需要将签证过的证书和私钥文件合并成一个<code>PKCS12</code>格式的证书，直接将这个<code>.p12</code>格式的证书交给用户就可以了。</p>
+<p>最后是吊销证书了，当希望收回某个用户的访问权限时，直接运行这个脚本跟上目录名就可以了。</p>
+<p>接下来运行创建CA的脚本:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./create_ca_cert.sh</span><br><span class="line">Generating a 2048 bit RSA private key</span><br><span class="line">.......................+++</span><br><span class="line">........................................................................................................+++</span><br><span class="line">writing new private key to &#x27;./demoCA/private/cakey.pem&#x27;</span><br><span class="line">-----</span><br><span class="line">Using configuration from /usr/ssl/openssl.cnf </span><br></pre></td></tr></table></figure>
+
+<p>此时产生的<code>./demoCA</code>目录结构如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">demoCA/</span><br><span class="line">├── cacert.pem</span><br><span class="line">├── crlnumber</span><br><span class="line">├── crlnumber.old</span><br><span class="line">├── index.txt</span><br><span class="line">├── newcerts</span><br><span class="line">├── private</span><br><span class="line">│   ├── ca.crl</span><br><span class="line">│   └── cakey.pem</span><br><span class="line">└── serial</span><br><span class="line"></span><br><span class="line">2 directories, 7 files </span><br></pre></td></tr></table></figure>
+
+<p>此时就可以配置nginx了，在上面单向ssl的配置中，追加以下配置:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssl_client_certificate ssl_certs/demoCA/cacert.pem;</span><br><span class="line">ssl_crl ssl_certs/demoCA/private/ca.crl;</span><br><span class="line">ssl_verify_client on; </span><br></pre></td></tr></table></figure>
+
+<p><code>ssl_client_certificate</code>就是客户端证书的CA证书了，代表此CA签发的证书都是可信的，<code>ssl_verify_client on;</code>代表强制启用客户端认证，非法客户端(无证书，证书不可信)都会返回400错。</p>
+<p>特别注意<code>ssl_crl</code>这个配置，代表Nginx会读取一个CRL(Certificate Revoke List)文件，之前说过，可能会有收回用户权限的需求，因此我们必须有吊销证书的功能，产生一个CRL文件让Nginx知道哪些证书被吊销了即可。</p>
+<blockquote>
+<p><strong>注意</strong>: Nginx配置都是静态的，读取配置文件之后都会加载到内存中，即使文件内容变化也不会重新读取。因此当CRL文件发生变更之后，Nginx并不能意识到有新的证书被吊销了，所以必须使用<code>reload</code>指令让Nginx重新读取配置文件: <code>service nginx reload</code>或<code>nginx -s reload</code></p>
+</blockquote>
+<p>此时重启Nginx服务，就可以完成SSL双向认证配置了。</p>
+<p>我们签发一个证书看看:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> ./create_client_cert.sh --ou 财务部 --cn 财务经理 --email cy@example.com</span><br><span class="line">Generating a 2048 bit RSA private key</span><br><span class="line">................................+++</span><br><span class="line">.............................................................................+++</span><br><span class="line">writing new private key to &#x27;财务经理/财务经理.key&#x27;</span><br><span class="line">-----</span><br><span class="line">Using configuration from /usr/ssl/openssl.cnf</span><br><span class="line">Check that the request matches the signature</span><br><span class="line">Signature ok</span><br><span class="line">Certificate Details:</span><br><span class="line">        Serial Number: 1 (0x1)</span><br><span class="line">        Validity</span><br><span class="line">            Not Before: Jun 14 16:03:46 2018 GMT</span><br><span class="line">            Not After : May 21 16:03:46 2118 GMT</span><br><span class="line">        Subject:</span><br><span class="line">            countryName               = CN</span><br><span class="line">            stateOrProvinceName       = Shannxi</span><br><span class="line">            organizationName          = My Company</span><br><span class="line">            organizationalUnitName    = \U8D22\U52A1\U90E8</span><br><span class="line">            commonName                = \U8D22\U52A1\U7ECF\U7406</span><br><span class="line">            emailAddress              = cy@example.com</span><br><span class="line">        X509v3 extensions:</span><br><span class="line">            X509v3 Basic Constraints:</span><br><span class="line">                CA:FALSE</span><br><span class="line">            Netscape Comment:</span><br><span class="line">                OpenSSL Generated Certificate</span><br><span class="line">            X509v3 Subject Key Identifier:</span><br><span class="line">                B5:91:0B:1F:FC:25:3B:2A:F9:EF:39:39:51:E3:1F:64:78:8A:C3:75</span><br><span class="line">            X509v3 Authority Key Identifier:</span><br><span class="line">                keyid:86:55:76:15:A3:F5:58:CB:8F:39:A3:56:8E:FF:18:97:AE:27:60:0F</span><br><span class="line"></span><br><span class="line">Certificate is to be certified until May 21 16:03:46 2118 GMT (36500 days)</span><br><span class="line"></span><br><span class="line">Write out database with 1 new entries</span><br><span class="line">Data Base Updated</span><br><span class="line"></span><br><span class="line">tree 财务经理/</span><br><span class="line">财务经理/</span><br><span class="line">├── 财务经理.crt</span><br><span class="line">├── 财务经理.csr</span><br><span class="line">├── 财务经理.key</span><br><span class="line">└── 财务经理.p12</span><br><span class="line"></span><br><span class="line">0 directories, 4 files </span><br></pre></td></tr></table></figure>
+
+<p>这个脚本生成了私钥文件<code>key</code>，签证请求文件<code>csr</code>，经过CA签证后的证书文件<code>crt</code>(里面没有私钥)，以及将crt文件和key进行bundle之后的<code>PKCS12</code>格式的证书文件<code>p12</code>，将<code>p12</code>文件下载到本地，双击一路Next导入证书即可。</p>
+<blockquote>
+<p><strong>注</strong>: 由于CA的证书文件不会发生变化，因此签证新的客户端证书不需要restart或reload nginx</p>
+</blockquote>
+<p>这次打开我们的网站<code>https://www.example.com</code>，浏览器就会提示我们选择一个已有的客户端证书进行认证了，没问题就可以看到网站内容了</p>
+<blockquote>
+<p><strong>注</strong>: 每次导入新的证书之后，必须重启浏览器才能提示使用新的证书文件</p>
+</blockquote>
+<p>按照这种方式，有多少人需要授权，就可以用这个脚本签发多少个这样的证书，用户将<code>p12</code>证书导入本地就可以正常访问网站了。</p>
+<p>当我们需要收回某人的权限的时候(比如离职了)，我们需要吊销他的证书:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> ./revoke_cert.sh 财务经理</span><br><span class="line">Using configuration from /usr/ssl/openssl.cnf</span><br><span class="line">Revoking Certificate 01.</span><br><span class="line">Data Base Updated</span><br><span class="line">Using configuration from /usr/ssl/openssl.cnf</span><br><span class="line"></span><br><span class="line">service nginx reload </span><br></pre></td></tr></table></figure>
+
+<p>这个脚本会自动吊销他的签证文件<code>crt</code>，并且自动更新<code>CRL</code>文件。特别注意需要reload或restart nginx才能让nginx重新加载CRL。这样被吊销的证书将无法访问网站了。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本文我们通过Nginx配置SSL双向认证实现对客户端的加密认证，我们使用了简易的脚本帮助我们快速生成各种证书与签证，免除记忆繁琐openssl命令行，简化使用。</p>
+<p>当然这只是一个最小可用集，当规模比较大的时候可能需要做很多改进，比如加入CA的web ui，直接可以操作签证和吊销证书，并且可以自动重启nginx。</p>
+<p>再比如CRL这种静态配置文件不适合你的场景，希望的动态更新吊销证书列表，那么可以考虑OCSP方案，这个Nginx也是支持的，通过ssl_stapling_responder配置指定一个OCSP地址，这样将不需要每次吊销证书的时候都去重启nginx了，openssl也提供了ocsp服务端的功能，这里就不赘述了，可以自行查找相关资料。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://eber.vip">eber</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://eber.vip/post/2021/11/15/55508/">https://eber.vip/post/2021/11/15/55508/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://eber.vip" target="_blank">Eber的小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Nginx/">Nginx</a><a class="post-meta__tags" href="/tags/SSL/">SSL</a></div><div class="post_share"><div class="social-share" data-image="https://up.eber.vip/Think-Me/img/main/upload/nginx.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.bootcdn.net/ajax/libs/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/2021/10/02/45569/" title="acme.sh入门教程"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/acme.sh-ssl_00-680x366.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">acme.sh入门教程</div></div></a></div><div class="next-post pull-right"><a href="/post/2021/11/15/13822/" title="OpenLiteSpeed的常用重写规则和头部操作"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/openlitespeed.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">OpenLiteSpeed的常用重写规则和头部操作</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/2021/12/05/49759/" title="Nginx的动静态gzip压缩配置及参数详解"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/nginx.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-05</div><div class="title">Nginx的动静态gzip压缩配置及参数详解</div></div></a></div><div><a href="/post/2022/03/05/50754/" title="Nginx的配置教程 - location多级目录"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/nginx.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-05</div><div class="title">Nginx的配置教程 - location多级目录</div></div></a></div><div><a href="/post/2022/01/23/28817/" title="如何防止IP被恶意解析"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/nginx.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-23</div><div class="title">如何防止IP被恶意解析</div></div></a></div><div><a href="/post/2021/10/02/45569/" title="acme.sh入门教程"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/acme.sh-ssl_00-680x366.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-02</div><div class="title">acme.sh入门教程</div></div></a></div><div><a href="/post/2022/02/20/24919/" title="acme.sh踩坑记录"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/acme.sh-ssl_00-680x366.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-20</div><div class="title">acme.sh踩坑记录</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://up.eber.vip/Think-Me/img/main/logo/eber.vip-modified.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">eber</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">45</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/think-me" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:admin@eber.vip" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">博主有4T的Windows大盘鸡、探针上部分机器可对外出租，有需要的可以邮件联系！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SSL%E5%8F%8C%E5%90%91%E8%AE%A4%E8%AF%81"><span class="toc-number">1.</span> <span class="toc-text">SSL双向认证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx%E7%9A%84SSL%E5%8F%8C%E5%90%91%E8%AE%A4%E8%AF%81%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">Nginx的SSL双向认证配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5-%E5%BC%80%E5%90%AFhttps%E8%AE%BF%E9%97%AE%E3%80%90%E6%9C%8D%E5%8A%A1%E7%AB%AF%E8%AF%81%E4%B9%A6%E4%B8%8D%E4%B8%80%E5%AE%9A%E5%BF%85%E9%A1%BB%E6%98%AF%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%98%AF%E5%90%8C%E4%B8%80CA%E7%AD%BE%E5%8F%91%E7%9A%84%E8%AF%81%E4%B9%A6%EF%BC%8C%E6%89%80%E4%BB%A5%E5%8F%AF%E4%BB%A5%E7%94%A8CA%E6%9C%BA%E6%9E%84%E7%9A%84%E6%AD%A3%E8%A7%84%E5%8F%AF%E4%BF%A1%E8%AF%81%E4%B9%A6%E3%80%91"><span class="toc-number">3.</span> <span class="toc-text">第一步 开启https访问【服务端证书不一定必须是和客户端是同一CA签发的证书，所以可以用CA机构的正规可信证书】</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5-%E7%94%9F%E6%88%90%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%81%E4%B9%A6%E5%B9%B6%E7%AD%BE%E8%AF%81-%E8%84%9A%E6%9C%AC"><span class="toc-number">4.</span> <span class="toc-text">第二步 生成客户端证书并签证(脚本)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/2023/06/30/43308/" title="GitHub Action使用自有服务器跑任务"><img src="https://up.eber.vip/Think-Me/img/main/upload/202304141815796.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GitHub Action使用自有服务器跑任务"/></a><div class="content"><a class="title" href="/post/2023/06/30/43308/" title="GitHub Action使用自有服务器跑任务">GitHub Action使用自有服务器跑任务</a><time datetime="2023-06-30T12:58:38.000Z" title="发表于 2023-06-30 20:58:38">2023-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/2023/06/10/7837/" title="DNS反射放大攻击1(Golang版)-了解并构建DNS请求"><img src="https://up.eber.vip/Think-Me/img/main/img/2023/06/1686277963-20230609103241.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="DNS反射放大攻击1(Golang版)-了解并构建DNS请求"/></a><div class="content"><a class="title" href="/post/2023/06/10/7837/" title="DNS反射放大攻击1(Golang版)-了解并构建DNS请求">DNS反射放大攻击1(Golang版)-了解并构建DNS请求</a><time datetime="2023-06-10T01:38:06.000Z" title="发表于 2023-06-10 09:38:06">2023-06-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/2023/05/06/65448/" title="自建tailscale custom derp记录"><img src="https://up.eber.vip/Think-Me/img/main/upload/tailscale.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="自建tailscale custom derp记录"/></a><div class="content"><a class="title" href="/post/2023/05/06/65448/" title="自建tailscale custom derp记录">自建tailscale custom derp记录</a><time datetime="2023-05-06T14:02:10.000Z" title="发表于 2023-05-06 22:02:10">2023-05-06</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2017 - 2023 By eber <a target="_blank" href="https://beian.miit.gov.cn" rel="external nofollow noreferrer">豫ICP备2021035851号-1</a></div><div class="footer_custom_text">本网站由 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral"><img src="https://up.eber.vip/Think-Me/img/main/upload/upyun.png" align="absmiddle" width="59px" height="30px"></a> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cloudflare.com"><img src="https://up.eber.vip/Think-Me/img/main/upload/CF_logo_horizontal_whitetype.svg" align="absmiddle" width="100px" height="30px"></a> 联合提供加速服务</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.bootcdn.net/ajax/libs/hexo-theme-butterfly/4.8.1/js/utils.min.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/hexo-theme-butterfly/4.8.1/js/main.min.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.15/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(()=>{
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://im.eber.vip',
+      region: '',
+      onCommentLoaded: function () {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://im.eber.vip',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      countELement.innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const runFn = () => {
+    init()
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') {
+      setTimeout(runFn,0)
+      return
+    } 
+    getScript('https://cdn.bootcdn.net/ajax/libs/twikoo/1.6.16/twikoo.all.min.js').then(runFn)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script src="https://cdn.bootcdn.net/ajax/libs/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="https://up.eber.vip/Think-Me/img/main/static/js/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.bootcdn.net/ajax/libs/hexo-theme-butterfly/4.8.1/js/search/local-search.min.js"></script></div></div></body></html>
