@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>将ChatGPT对接到飞书或钉钉1-申请Azure OpenAI</title>
+      <link href="/post/2023/08/03/49000/"/>
+      <url>/post/2023/08/03/49000/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、-注册Azure账号"><a href="#一、-注册Azure账号" class="headerlink" title="一、 注册Azure账号"></a>一、 注册Azure账号</h2><p>点击这里 <a href="https://portal.azure.com/">Azure</a> 进入Azure官网，注册一个账号，注册时需要绑定一张信用卡，但是不会扣费，只是为了验证你的身份。</p><ul><li>如果你没有信用卡，可以使用 <a href="https://privacy.com/">Privacy</a> 生成一张虚拟信用卡，然后绑定到Azure账号上。</li><li>如果你有Azure100美刀的学生订阅，可以直接使用学生订阅的账号。</li></ul><h2 id="二、-准备申请"><a href="#二、-准备申请" class="headerlink" title="二、 准备申请"></a>二、 准备申请</h2><ol><li>在搜索框中直接搜openai，然后点击进入，如下图所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691054260-202308031717925.png"></li><li>点击上图页面上的创建Azure OpenAI按钮跳转到如下页面：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691054450-202308031720387.png"></li><li>点击”单击此处请求访问Azure OpenAI服务”，跳转到如下页面：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691054655-202308031724685.png"></li><li>填写对应信息即可申请</li><li>提交申请后，会收到一封邮件，如下图所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691055022-202308031730342.png"></li><li>大概一个工作日就会收到结果，成功的邮件如下所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691055165-202308031732786.png"></li></ol><h2 id="三、-申请注意事项"><a href="#三、-申请注意事项" class="headerlink" title="三、 申请注意事项"></a>三、 申请注意事项</h2><ol><li>大部分问题都随便填写即可，只要不是太离谱就行。</li><li>订阅ID一定一定一定不要填写错误！<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691054970-202308031729943.png"></li><li>这里的邮箱一定要填写企业邮箱(可以是自己搭建的域名邮箱)<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691054790-202308031726926.png"></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 瞎折腾 </category>
+          
+          <category> 开发与测试 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ChatGPT </tag>
+            
+            <tag> OpenAI </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>GitHub Action使用自有服务器跑任务</title>
       <link href="/post/2023/06/30/43308/"/>
       <url>/post/2023/06/30/43308/</url>
@@ -519,9 +548,9 @@
       
         <tags>
             
-            <tag> Golang </tag>
-            
             <tag> Java </tag>
+            
+            <tag> Golang </tag>
             
             <tag> 指针 </tag>
             
