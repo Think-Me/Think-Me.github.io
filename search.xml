@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>brew安装指定版本软件</title>
+      <link href="/post/2023/08/09/41685/"/>
+      <url>/post/2023/08/09/41685/</url>
+      
+        <content type="html"><![CDATA[<h2 id="brew安装指定版本软件"><a href="#brew安装指定版本软件" class="headerlink" title="brew安装指定版本软件"></a>brew安装指定版本软件</h2><ul><li>该教程一共就两步，非常简单，但是很多人都不知道，所以写下来，方便大家查阅。这里用tailscale为例，其他软件也是一样的。</li></ul><ol><li><p>找到软件对应版本的rb文件</p><p> 访问<a href="https://formulae.brew.sh/">brew</a>官网，在搜索框里搜软件名称，如下图所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691566585-202308091536730.png"><br> 点击上图中红框圈起来的<mark class="hl-label pink">tailscale.rb</mark> ，进入github，如下图所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691566704-202308091538628.png"><br> 点击上图中红框圈起来的<mark class="hl-label pink">History</mark> ，进入rb文件的提交历史，如下图所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691566855-202308091540352.png"><br> 比如现在tailscale的最新版本是1.46.1，我想安装1.44.2。那么就去点击上图中红框圈起来的按钮，进入该版本rb文件预览，如下图所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691566998-202308091543075.png"><br> 点击上图中红框圈起来的下载按钮即可得到该版本的rb文件。</p></li><li><p>安装rb文件对应版本的软件</p><p> 打开终端，执行<code>brew install --formula /path/to/tailscale.rb</code>即可安装指定版本的软件。</p></li></ol><ul><li>注意：tailscale.rb的路径一定不要搞错，并且rb文件名必须为软件包的名称，不能自己随意修改名称。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 开发与测试 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> brew </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>将ChatGPT对接到飞书或钉钉2-创建模型并对接</title>
       <link href="/post/2023/08/08/49000/"/>
       <url>/post/2023/08/08/49000/</url>
@@ -14,8 +39,6 @@
       <categories>
           
           <category> 瞎折腾 </category>
-          
-          <category> 开发与测试 </category>
           
       </categories>
       
@@ -43,8 +66,6 @@
       <categories>
           
           <category> 瞎折腾 </category>
-          
-          <category> 开发与测试 </category>
           
       </categories>
       
@@ -97,8 +118,6 @@
       <categories>
           
           <category> 安全与运维 </category>
-          
-          <category> 开发与测试 </category>
           
       </categories>
       
@@ -577,9 +596,9 @@
       
         <tags>
             
-            <tag> Golang </tag>
-            
             <tag> Java </tag>
+            
+            <tag> Golang </tag>
             
             <tag> 指针 </tag>
             
