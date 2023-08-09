@@ -5,6 +5,35 @@
     
     <entry>
       <title>将ChatGPT对接到飞书或钉钉1-申请Azure OpenAI</title>
+      <link href="/post/2023/08/08/49000/"/>
+      <url>/post/2023/08/08/49000/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、-创建Azure-OpenAI模型"><a href="#一、-创建Azure-OpenAI模型" class="headerlink" title="一、 创建Azure OpenAI模型"></a>一、 创建Azure OpenAI模型</h2><ol><li>在搜索框中直接搜openai，然后点击进入，如下图所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691054260-202308031717925.png"></li><li>点击上图页面上的创建Azure OpenAI按钮跳转到如下页面：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691483756-202308081635082.png"></li><li>点击”下一步”，跳转到如下页面：这里选择所有网络即可<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691549015-202308091043852.png"></li><li>后面的都是默认的，最后点击创建：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691549133-202308091045549.png"></li><li>部署完成后，点击”转到资源”到如下页面：记录一下<mark class="hl-label pink">终结点</mark> 和理密钥中<mark class="hl-label pink">密钥1或密钥2</mark> ，后面会用到<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691549539-202308091052043.png"><br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691549643-202308091054146.png"></li><li>再点击上图左侧”模型部署”进入Azure OpenAI Studio页面：这里记录一下<mark class="hl-label pink">部署名</mark> 后面要用到<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691549845-202308091057363.png"></li><li>创建完成之后点击左侧”聊天”菜单，随便输出一句话点击”发送”，然后点击”查看代码”：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691550170-202308091102357.png"><br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691550247-202308091104331.png"></li><li>记录一下代码中的openai.api_version的值，我这里是<mark class="hl-label pink">2023-03-15-preview</mark> </li><li>OK，现在需要的参数都已经获取完毕！下面就是正式对接飞书或钉钉了。</li></ol><h2 id="二、-对接飞书"><a href="#二、-对接飞书" class="headerlink" title="二、 对接飞书"></a>二、 对接飞书</h2><ol><li>飞书开发者平台的操作在<a href="https://github.com/ConnectAI-E/Feishu-OpenAI#%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE%E6%AD%A5%E9%AA%A4">GitHub</a>上已经有教程了，这里不再赘述。</li><li>使用docker方式部署ConnectAI-E&#x2F;Feishu-OpenAI项目，由于作者没有打镜像，这里使用我构建的镜像即可。把{}中的内容替换成你自己的即可。<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d --name feishu-chatgpt -p 9000:9000 \</span><br><span class="line">--env APP_ID=&#123;飞书应用凭证中的 App Id&#125; \</span><br><span class="line">--env APP_SECRET=&#123;飞书应用凭证中的 App Secret&#125; \</span><br><span class="line">--env APP_ENCRYPT_KEY=&#123;飞书应用-事件订阅中的 Encrypt Key&#125; \</span><br><span class="line">--env APP_VERIFICATION_TOKEN=&#123;飞书应用-事件订阅中的 Verification Token&#125; \</span><br><span class="line">--env BOT_NAME=&#123;飞书应用-机器人的名字&#125; \</span><br><span class="line">--env AZURE_ON=true \</span><br><span class="line">--env AZURE_API_VERSION=&#123;前面第8步获取的openai.api_version 我的是2023-03-15-preview&#125; \</span><br><span class="line">--env AZURE_RESOURCE_NAME=&#123;前面第5步获取的终结点域名的前缀 我的是eber-test1&#125; \</span><br><span class="line">--env AZURE_DEPLOYMENT_NAME=&#123;前面第6步获取的部署名 我的是ebervip&#125; \</span><br><span class="line">--env AZURE_OPENAI_TOKEN=&#123;前面第5步获取的密钥1或密钥2&#125; \</span><br><span class="line">717160040/openai:feishu.v1 # 这里镜像名默认是arm的，如果是amd64的请使用717160040/openai:feishu_amd64_v1</span><br></pre></td></tr></table></figure></li></ol><ul><li>全部搞定后，可以在飞书群中将机器人拉入群，然后@机器人触发。如下图所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691551529-202308091125102.png"></li><li>也可以私聊。注意连续对话需要用回复的方式回复机器人，否则机器人会认为是新的对话。</li><li>发送帮助则可以查看一些特定指令：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691551684-202308091128584.png"></li></ul><h2 id="三、-对接钉钉"><a href="#三、-对接钉钉" class="headerlink" title="三、 对接钉钉"></a>三、 对接钉钉</h2><ol><li>同样钉钉开发者平台的操作在<a href="https://github.com/ConnectAI-E/Dingtalk-OpenAI#%E7%AC%AC%E4%BA%8C%E6%AD%A5%E6%B7%BB%E5%8A%A0%E5%BA%94%E7%94%A8">GitHub</a>上已经有教程了，这里不再赘述。</li><li>点击这里下载<a href="https://raw.githubusercontent.com/ConnectAI-E/Dingtalk-OpenAI/main/docker-compose.yml">docker-compose.yml</a>，这里我们用docker-compose方式部署ConnectAI-E&#x2F;Dingtalk-OpenAI项目。参照下面的描述去修改下载的yml文件，下面我只列出需要修改的配置项，特别要注意带⚠️的配置项。<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">   <span class="attr">chatgpt:</span></span><br><span class="line">      <span class="attr">container_name:</span> <span class="string">chatgpt</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">registry.cn-hangzhou.aliyuncs.com/ali_eryajf/chatgpt-dingtalk</span></span><br><span class="line">      <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">      <span class="attr">environment:</span></span><br><span class="line">         <span class="attr">APIKEY:</span>   <span class="comment"># ⚠️我们用的是azure，这里直接留空</span></span><br><span class="line">         <span class="attr">RUN_MODE:</span> <span class="string">&quot;stream&quot;</span>  <span class="comment"># 运行模式，http 或者 stream ，强烈建议你使用stream模式，通过此链接了解：https://open.dingtalk.com/document/isvapp/stream</span></span><br><span class="line">         <span class="attr">BASE_URL:</span> <span class="string">&quot;&quot;</span>  <span class="comment"># ⚠️我们用的是azure，这里直接留空</span></span><br><span class="line">         <span class="attr">MODEL:</span> <span class="string">&quot;&quot;</span> <span class="comment"># ⚠️我们用的是azure，这里直接留空</span></span><br><span class="line">         <span class="attr">DEFAULT_MODE:</span> <span class="string">&quot;串聊&quot;</span> <span class="comment"># 指定默认的对话模式，可根据实际需求进行自定义，如果不设置，默认为单聊，即无上下文关联的对话模式</span></span><br><span class="line">         <span class="attr">PORT:</span> <span class="number">8090</span> <span class="comment"># 指定服务启动端口，默认为 8090，容器化部署时，不需要调整，一般在二进制宿主机部署时，遇到端口冲突时使用，如果run_mode为stream模式，则可以忽略该配置项</span></span><br><span class="line">         <span class="attr">SERVICE_URL:</span> <span class="string">&quot;http://1.1.1.1:8090&quot;</span>  <span class="comment"># ⚠️服务的地址 例如你服务器IP是1.1.1.1 则为http://1.1.1.1:8090</span></span><br><span class="line">         <span class="attr">CHAT_TYPE:</span> <span class="string">&quot;0&quot;</span></span><br><span class="line">         <span class="attr">APP_SECRETS:</span> <span class="string">&quot;&#123;钉钉机器人在应用信息中的AppSecret&#125;&quot;</span> <span class="comment"># 钉钉机器人在应用信息中的AppSecret，为了校验回调的请求是否合法，如果留空，将会忽略校验，则该接口将会存在其他人也能随意调用的安全隐患，因此强烈建议配置正确的secret，如果你的服务对接给多个机器人，这里可以配置多个机器人的secret，比如 &quot;xxxx,yyyy&quot;</span></span><br><span class="line">         <span class="attr">SENSITIVE_WORDS:</span> <span class="string">&quot;&quot;</span> <span class="comment"># 敏感词，提问时触发，则不允许提问，回答的内容中触发，则以 🚫 代替</span></span><br><span class="line">         <span class="attr">AZURE_ON:</span> <span class="string">&quot;true&quot;</span> <span class="comment"># ⚠️是否走Azure OpenAi API, 默认false ,如果为true，则需要配置下边的四个参数</span></span><br><span class="line">         <span class="attr">AZURE_API_VERSION:</span> <span class="string">&quot;&quot;</span> <span class="comment"># ⚠️参考上面飞书的配置说明</span></span><br><span class="line">         <span class="attr">AZURE_RESOURCE_NAME:</span> <span class="string">&quot;&quot;</span> <span class="comment"># ⚠️参考上面飞书的配置说明</span></span><br><span class="line">         <span class="attr">AZURE_DEPLOYMENT_NAME:</span> <span class="string">&quot;&quot;</span> <span class="comment"># ⚠️参考上面飞书的配置说明</span></span><br><span class="line">         <span class="attr">AZURE_OPENAI_TOKEN:</span> <span class="string">&quot;&quot;</span> <span class="comment"># ⚠️参考上面飞书的配置说明</span></span><br><span class="line">         <span class="attr">DINGTALK_CREDENTIALS:</span> <span class="string">&quot;xxx:xxxxxxxxxxxxxx&quot;</span> <span class="comment"># ⚠️ # 钉钉应用访问凭证，比如 client_id1:secret1 是需要把这俩拼一起的，中间用冒号隔开，如果你的服务对接给多个机器人，这里可以配置多个机器人的凭证，比如 &quot;client_id1:secret1,client_id2:secret2&quot;</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">         <span class="bullet">-</span> <span class="string">./data:/app/data</span></span><br><span class="line">      <span class="attr">ports:</span></span><br><span class="line">         <span class="bullet">-</span> <span class="string">&quot;8090:8090&quot;</span></span><br><span class="line">      <span class="attr">extra_hosts:</span></span><br><span class="line">         <span class="bullet">-</span> <span class="string">host.docker.internal:host-gateway</span></span><br></pre></td></tr></table></figure></li></ol><ul><li>同样，全部搞定后，可以在钉钉群中将机器人拉入群，然后@机器人触发或者私聊触发。如下图所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2023/08/1691552985-202308091149467.png"></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 瞎折腾 </category>
+          
+          <category> 开发与测试 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ChatGPT </tag>
+            
+            <tag> OpenAI </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>将ChatGPT对接到飞书或钉钉1-申请Azure OpenAI</title>
       <link href="/post/2023/08/03/49000/"/>
       <url>/post/2023/08/03/49000/</url>
       
@@ -548,9 +577,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Golang </tag>
+            
+            <tag> Java </tag>
             
             <tag> 指针 </tag>
             
