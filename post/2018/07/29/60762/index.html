@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>小白玩转Linux的必备技能——进阶篇 | Eber的小窝</title><meta name="author" content="eber"><meta name="copyright" content="eber"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="玩转Linux的必备技能–进阶篇如下：1、启用root用户 某些公有云服务商不会直接提供给你root账户，而是给你密钥或者是其他用户，这种情况下就需要我们手动开启root账户并设置密码登录。  先用云服务商提供给你的密钥文件或者是其他用户登录上去 然后执行sudo su获得root权限 执行vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config找到PermitRootLogi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小白玩转Linux的必备技能——进阶篇">
+<meta property="og:url" content="https://eber.vip/post/2018/07/29/60762/index.html">
+<meta property="og:site_name" content="Eber的小窝">
+<meta property="og:description" content="玩转Linux的必备技能–进阶篇如下：1、启用root用户 某些公有云服务商不会直接提供给你root账户，而是给你密钥或者是其他用户，这种情况下就需要我们手动开启root账户并设置密码登录。  先用云服务商提供给你的密钥文件或者是其他用户登录上去 然后执行sudo su获得root权限 执行vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config找到PermitRootLogi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://up.eber.vip/Think-Me/img/main/upload/linux-vs-ubuntu.png">
+<meta property="article:published_time" content="2018-07-28T16:10:10.000Z">
+<meta property="article:modified_time" content="2018-07-28T16:10:10.000Z">
+<meta property="article:author" content="eber">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Termius">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://up.eber.vip/Think-Me/img/main/upload/linux-vs-ubuntu.png"><link rel="shortcut icon" href="https://up.eber.vip/Think-Me/img/main/static/favicon.ico"><link rel="canonical" href="https://eber.vip/post/2018/07/29/60762/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><meta name="baidu-site-verification" content="codeva-RpsHAjsfoN"/><link rel="stylesheet" href="https://up.eber.vip/Think-Me/img/main/static/css/index.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.15/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-8820737714769485',
+  enable_page_level_ads: 'true'
+});</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0d87231a10d73d7b43ff2dc95037cb9d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-BWSGWCECKH"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-BWSGWCECKH');
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.bootcdn.net/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.js',
+      css: 'https://cdn.bootcdn.net/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '小白玩转Linux的必备技能——进阶篇',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2018-07-29 00:10:10'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://up.eber.vip/Think-Me/img/main/logo/eber.vip-modified.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">50</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/gpt/"><i class="fa-fw fa-brands fa-airbnb"></i><span> GPT</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Eber的小窝"><span class="site-name">Eber的小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/gpt/"><i class="fa-fw fa-brands fa-airbnb"></i><span> GPT</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">小白玩转Linux的必备技能——进阶篇</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2018-07-28T16:10:10.000Z" title="发表于 2018-07-29 00:10:10">2018-07-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2018-07-28T16:10:10.000Z" title="更新于 2018-07-29 00:10:10">2018-07-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%AE%89%E5%85%A8%E4%B8%8E%E8%BF%90%E7%BB%B4/">安全与运维</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title="小白玩转Linux的必备技能——进阶篇"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="twikoo_visitors"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/2018/07/29/60762/#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="post-content" id="article-container"><h3 id="玩转Linux的必备技能–进阶篇"><a href="#玩转Linux的必备技能–进阶篇" class="headerlink" title="玩转Linux的必备技能–进阶篇"></a>玩转Linux的必备技能–进阶篇</h3><h4 id="如下："><a href="#如下：" class="headerlink" title="如下："></a>如下：</h4><p><em><strong>1、启用root用户</strong></em></p>
+<p>某些公有云服务商不会直接提供给你root账户，而是给你密钥或者是其他用户，这种情况下就需要我们手动开启root账户并设置密码登录。</p>
+<ul>
+<li>先用云服务商提供给你的密钥文件或者是其他用户登录上去</li>
+<li>然后执行sudo su获得root权限</li>
+<li>执行vi &#x2F;etc&#x2F;ssh&#x2F;sshd_config找到<strong>PermitRootLogin</strong>和<strong>PasswordAuthentication</strong>如果这两项前面有注释则去掉注释并将后面改为<strong>yes</strong></li>
+<li>文件保存退出后执行<strong>passwd root</strong>按照提示进行root账户的密码设置(输入的密码不会显示)</li>
+<li>最后执行<strong>systemctl restart sshd</strong>重启ssh服务，然后就可以用root用户登录了</li>
+</ul>
+<p><em><strong>2、了解Linux的目录结构</strong></em></p>
+<ul>
+<li>&#x2F; ：根目录，每一个文件和目录从根目录开始，只有root用户具有该目录下的写权限。</li>
+<li>&#x2F;bin ： 用户二进制文件包含二进制可执行文件。在单用户模式下，你需要使用的常见Linux命令都位于此目录下。系统的所有用户使用的命令都设在这里。</li>
+<li>&#x2F;boot ：主要放置开关机会使用的文件，包括Linux 内核文件以及开关机菜单与开机所需要的配置文件。</li>
+<li>&#x2F;dev ：在Linux 系统中所有的设备与接口设备都是以文件的形式存放在这个目录中。只要访问这个目录下的某个文件就相当于访问某个设备。</li>
+<li>&#x2F;etc ：所有系统管理所需要的配置文件和子目录。比如设置运行级别。</li>
+<li>&#x2F;home ：存放普通用户的主目录，在Linux 系统中每个用户都有一个独立的目录，一般该目录名以账号用户名命名。</li>
+<li>&#x2F;lib ：系统开机所需要的最基本的动态链接共享库，功能类似于Windows 中的DLL 文件。几乎所有的应用程序都需要用到这些共享库。</li>
+<li>&#x2F;lost + found ：这个目录一般是空的，当用户非法关机后会保存一些文件。</li>
+<li>&#x2F;misc ：挂载外部设备</li>
+<li>&#x2F;media ：Linux 系统会自动识别一些设备，例如U 盘、光驱等，当识别后Linux 会把识别的设备挂在这个目录下。</li>
+<li>&#x2F;mnt ：为了让用户临时挂载别的文件系统，我们可以将光驱挂在在该目录中。</li>
+<li>&#x2F;opt ：给主机安装额外软件所摆放的目录。默认情况下是空的。比如我们可以将数据库安装在这个目录下。</li>
+<li>&#x2F;proc ：这个目录上是一个虚拟的目录，它是系统内存的映射，我们通常可以访问这个目录来获取系统信息。</li>
+<li>&#x2F;root ：该目录为系统管理员的主目录。</li>
+<li>&#x2F;sbin ：Super Bin的意思， 系统二进制文件，就像&#x2F;bin，&#x2F;sbin同样也包含二进制可执行文件。但是，在这个目录下的linux命令通常由系统管理员使用，对系统进行维护。</li>
+<li>&#x2F;selinux ：这个目录是Redhet 与CentOS 所特有的目录，是一个安全机制，类似于防火墙。</li>
+<li>&#x2F;srv ：service 的缩写，该目录存放一些服务启动之后需要提取的数据。</li>
+<li>&#x2F;sys ：该目录下安装了2.6 内核中新出现的一个文件系统sysfs。</li>
+<li>&#x2F;tmp ：该目录用来存放一些临时文件。</li>
+<li>&#x2F;usr ：很重要的一个目录，用户的很多应用程序和文件都放在这个目录下。类似于Windows 中的program files 目录。</li>
+<li>&#x2F;var ：这个目录存放着在不断被扩充的文件。我们习惯将那些经常需要被修改的文件放在该目录下，比如一些日志文件等。</li>
+</ul>
+<p><em><strong>3、了解文件权限</strong></em><br>作为小白的你往往不会自己去写shell脚本，经常去网上找别人写好的相同功能的脚本，这时你下载下来准备执行的时候发现无法执行。</p>
+<ul>
+<li>这是为什么呢？这是因为改为鉴不具备执行权限所以无法运行。</li>
+<li>这个时候我们就需要简单的了解一下文件的权限<br>可能权限就像下面这样：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">-     rw-    r--    r--</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>那么如何更改文件的权限呢？<br>这个时候我们就需要chmod命令了<br>语法<br>chmod [-cfvR] [–help] [–version] mode file…<br>参数说明<br>mode : 权限设定字串，格式如下 :</p>
+<p>[ugoa…][[+-&#x3D;][rwxX]…][,…]<br>其中：</p>
+<p>u 表示该文件的拥有者，g 表示与该文件的拥有者属于同一个群体(group)者，o 表示其他以外的人，a 表示这三者皆是。</p>
+<ul>
+<li>表示增加权限、- 表示取消权限、&#x3D; 表示唯一设定权限。<br>r 表示可读取，w 表示可写入，x 表示可执行，X 表示只有当该文件是个子目录或者该文件已经被设定过为可执行。<br>其他参数说明：</li>
+</ul>
+<p>-c : 若该文件权限确实已经更改，才显示其更改动作<br>-f : 若该文件权限无法被更改也不要显示错误讯息<br>-v : 显示权限变更的详细资料<br>-R : 对目前目录下的所有文件与子目录进行相同的权限变更(即以递回的方式逐个变更)<br>–help : 显示辅助说明<br>–version : 显示版本<br><strong>实例：</strong><br>将文件 file1.txt 设为所有人皆可读取 :<br>chmod ugo+r file1.txt</p>
+<p>将文件 file1.txt 设为所有人皆可读取 :<br>chmod a+r file1.txt</p>
+<p>将文件 file1.txt 与 file2.txt 设为该文件拥有者，与其所属同一个群体者可写入，但其他以外的人则不可写入 :<br>chmod ug+w,o-w file1.txt file2.txt</p>
+<p>将 ex1.py 设定为只有该文件拥有者可以执行 :<br>chmod u+x ex1.py</p>
+<p>将目前目录下的所有文件与子目录皆设为任何人可读取 :<br>chmod -R a+r *</p>
+<p>此外chmod也可以用数字来表示权限如 :<br>chmod 777 file</p>
+<p>语法为：<br>chmod abc file<br>其中a,b,c各为一个数字，分别表示User、Group、及Other的权限。</p>
+<p>r&#x3D;4，w&#x3D;2，x&#x3D;1<br>若要rwx属性则4+2+1&#x3D;7；<br>若要rw-属性则4+2&#x3D;6；<br>若要r-x属性则4+1&#x3D;5。<br>chmod a&#x3D;rwx file和chmod 777 file效果相同<br>chmod ug&#x3D;rwx,o&#x3D;x file和chmod 771 file效果相同<br>若用chmod 4755 filename可使此程序具有root的权限</p>
+<p><em><strong>好了说了那么多，直接一点吧！！！</strong></em><br>我们简单一点比如我们的操作对象为 a.sh<br>想要赋予执行权限直接可以用chmod +x a.sh即可<br>然后就可以快乐的用.&#x2F;a.sh跑脚本了。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://eber.vip">eber</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://eber.vip/post/2018/07/29/60762/">https://eber.vip/post/2018/07/29/60762/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://eber.vip" target="_blank">Eber的小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/Termius/">Termius</a></div><div class="post_share"><div class="social-share" data-image="https://up.eber.vip/Think-Me/img/main/upload/linux-vs-ubuntu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/butterfly-extsrc/1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.bootcdn.net/ajax/libs/butterfly-extsrc/1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://up.eber.vip/Think-Me/img/main/2023/09/1695283278-202309211601651.png" target="_blank"><img class="post-qr-code-img" src="https://up.eber.vip/Think-Me/img/main/2023/09/1695283278-202309211601651.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://up.eber.vip/Think-Me/img/main/2023/09/1695283215-202309211600353.png" target="_blank"><img class="post-qr-code-img" src="https://up.eber.vip/Think-Me/img/main/2023/09/1695283215-202309211600353.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/2018/07/18/64524/" title="小白玩转Linux的必备技能——入门篇"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/debian-logo-1024x576.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">小白玩转Linux的必备技能——入门篇</div></div></a></div><div class="next-post pull-right"><a href="/post/2018/08/01/29233/" title="抓取占用CPU高的JAVA线程，进而找出有问题的代码段"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/java.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">抓取占用CPU高的JAVA线程，进而找出有问题的代码段</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/2018/07/18/64524/" title="小白玩转Linux的必备技能——入门篇"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/debian-logo-1024x576.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-07-18</div><div class="title">小白玩转Linux的必备技能——入门篇</div></div></a></div><div><a href="/post/2021/12/31/50729/" title="两步实现在Ubuntu18,20等高版本设置静态IP"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/20211229222857.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-31</div><div class="title">两步实现在Ubuntu18,20等高版本设置静态IP</div></div></a></div><div><a href="/post/2022/01/09/47231/" title="使用火焰图分析CPU使用情况"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/2022/01/20220110174720.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-09</div><div class="title">使用火焰图分析CPU使用情况</div></div></a></div><div><a href="/post/2022/04/16/29640/" title="关于limits不生效的问题"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/20211229222857.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-16</div><div class="title">关于limits不生效的问题</div></div></a></div><div><a href="/post/2021/11/20/57183/" title="磁盘文件系统---inode"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/3787390984.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-20</div><div class="title">磁盘文件系统---inode</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://up.eber.vip/Think-Me/img/main/logo/eber.vip-modified.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">eber</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">50</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/think-me" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:admin@office365.eber.vip" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">点击顶部菜单栏 GPT 可在线体验AI助手。部分网络下可能需要代理才能打开！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%A9%E8%BD%ACLinux%E7%9A%84%E5%BF%85%E5%A4%87%E6%8A%80%E8%83%BD%E2%80%93%E8%BF%9B%E9%98%B6%E7%AF%87"><span class="toc-number">1.</span> <span class="toc-text">玩转Linux的必备技能–进阶篇</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">如下：</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/2023/09/21/21181/" title="Mac上最强虚拟机Parallels Desktop破解版"><img src="https://up.eber.vip/Think-Me/img/main/2023/09/1695287042-202309211704100.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Mac上最强虚拟机Parallels Desktop破解版"/></a><div class="content"><a class="title" href="/post/2023/09/21/21181/" title="Mac上最强虚拟机Parallels Desktop破解版">Mac上最强虚拟机Parallels Desktop破解版</a><time datetime="2023-09-21T12:06:32.000Z" title="发表于 2023-09-21 20:06:32">2023-09-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/2023/09/21/39935/" title="Navicat Premium 16 Mac破解版"><img src="https://up.eber.vip/Think-Me/img/main/2023/09/1695282851-202309211554264.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Navicat Premium 16 Mac破解版"/></a><div class="content"><a class="title" href="/post/2023/09/21/39935/" title="Navicat Premium 16 Mac破解版">Navicat Premium 16 Mac破解版</a><time datetime="2023-09-21T11:47:51.000Z" title="发表于 2023-09-21 19:47:51">2023-09-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/2023/09/17/49693/" title="Redis bitmaps学习笔记"><img src="https://up.eber.vip/Think-Me/img/main/2023/09/1694589201-202309131513697.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis bitmaps学习笔记"/></a><div class="content"><a class="title" href="/post/2023/09/17/49693/" title="Redis bitmaps学习笔记">Redis bitmaps学习笔记</a><time datetime="2023-09-17T06:43:00.000Z" title="发表于 2023-09-17 14:43:00">2023-09-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2017 - 2023 By eber <a target="_blank" href="https://beian.miit.gov.cn" rel="external nofollow noreferrer">豫ICP备2021035851号-1</a></div><div class="footer_custom_text">本网站由 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral"><img src="https://up.eber.vip/Think-Me/img/main/upload/upyun.png" align="absmiddle" width="59px" height="30px"></a> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cloudflare.com"><img src="https://up.eber.vip/Think-Me/img/main/upload/CF_logo_horizontal_whitetype.svg" align="absmiddle" width="100px" height="30px"></a> 联合提供加速服务</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdn.bootcdn.net/ajax/libs/hexo-theme-butterfly/4.8.1/js/utils.min.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/hexo-theme-butterfly/4.8.1/js/main.min.js"></script><script src="https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.15/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(()=>{
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://im.eber.vip',
+      region: '',
+      onCommentLoaded: function () {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://im.eber.vip',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      countELement.innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const runFn = () => {
+    init()
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') {
+      setTimeout(runFn,0)
+      return
+    } 
+    getScript('https://cdn.bootcdn.net/ajax/libs/twikoo/1.6.16/twikoo.all.min.js').then(runFn)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script src="https://cdn.bootcdn.net/ajax/libs/butterfly-extsrc/1.1.3/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="https://up.eber.vip/Think-Me/img/main/static/js/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdn.bootcdn.net/ajax/libs/hexo-theme-butterfly/4.8.1/js/search/local-search.min.js"></script></div></div></body></html>
