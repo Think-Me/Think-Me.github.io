@@ -209,7 +209,7 @@ gtag('config', 'G-BWSGWCECKH');
   const init = () => {
     twikoo.init(Object.assign({
       el: '#twikoo-wrap',
-      envId: 'https://im.eber.vip:60443',
+      envId: 'https://im.t.eber.vip',
       region: '',
       onCommentLoaded: function () {
         btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
@@ -221,7 +221,7 @@ gtag('config', 'G-BWSGWCECKH');
     const countELement = document.getElementById('twikoo-count')
     if(!countELement) return
     twikoo.getCommentsCount({
-      envId: 'https://im.eber.vip:60443',
+      envId: 'https://im.t.eber.vip',
       region: '',
       urls: [window.location.pathname],
       includeReply: false
