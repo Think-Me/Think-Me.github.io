@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>解决使用GitHub Pages自定义域名后无法正常申请通配符证书的问题</title>
+      <link href="/post/2024/01/02/33430/"/>
+      <url>/post/2024/01/02/33430/</url>
+      
+        <content type="html"><![CDATA[<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>例如：我将 eber.vip 设置为GitHub Pages的自定义域名，并使用CNAME方式接入。在使用acme.sh或其他工具申请通配符证书时，出现了”CAA record for eber.vip prevents issuance”的错误，导致无法申请ssl证书。<br><img src="/../img/acme/errorimg.png" alt="errorimg.png"></p><h3 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h3><p>当 CA 机构查询 eber.vip 的 CAA 记录时，如果该域名有 CNAME 记录会优先查询 CNAME 指向的地址是否有 CAA 记录，恰巧github.io配置了 CAA, 并且允许 Let’s Encrypt 颁发单域名证书以及允许 Digi Cert 颁发单域名与通配符证书，所以当我们去申请 Let’s Encrypt 免费的通配符证书时会被驳回。</p><h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>一共有多种解决方案，我这里列举两个比较好操作的方式，任选其一即可！</p><ol><li>不使用根域作为 GitHub Pages 的自定义域名。</li><li>用A记录接入 GitHub Pages 而不用 CNAME，<a href="https://docs.github.com/zh/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-an-apex-domain">参考文档</a>。</li></ol><h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><ul><li><a href="https://letsencrypt.org/zh-cn/docs/caa/">证书颁发机构授权（CAA）</a></li><li><a href="https://zh.wikipedia.org/wiki/DNS%E8%AF%81%E4%B9%A6%E9%A2%81%E5%8F%91%E6%9C%BA%E6%9E%84%E6%8E%88%E6%9D%83">CAA记录</a></li><li><a href="https://cloud.tencent.com/document/product/400/88117">腾讯云文档</a></li><li><a href="https://docs.github.com/zh/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-an-apex-domain-and-the-www-subdomain-variant">GitHub文档</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 安全与运维 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> acme.sh </tag>
+            
+            <tag> SSL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Overlay文件系统</title>
       <link href="/post/2023/12/25/14212/"/>
       <url>/post/2023/12/25/14212/</url>
