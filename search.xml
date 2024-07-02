@@ -13,14 +13,14 @@
       
       <categories>
           
-          <category> 【可选】 </category>
+          <category> 安全与运维 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 【可选】 </tag>
+            <tag> Linux </tag>
             
         </tags>
       
@@ -754,9 +754,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Golang </tag>
+            
+            <tag> Java </tag>
             
             <tag> 指针 </tag>
             
