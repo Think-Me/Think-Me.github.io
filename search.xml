@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>揪出隐藏的病毒进程</title>
+      <link href="/post/2024/05/31/56177/"/>
+      <url>/post/2024/05/31/56177/</url>
+      
+        <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>博主在访问pve web端时偶然发现有个虚拟机CPU占用持续100%！！！于是连接到虚拟机中使用top查看系统资源使用情况，但是CPU占用率显示100%而下方的进程列表中按CPU占用排序并没有高占用进程。所以判断应该是病毒程序使用了某些隐藏手段！</p><h3 id="1-使用unhide找出隐藏进程"><a href="#1-使用unhide找出隐藏进程" class="headerlink" title="1. 使用unhide找出隐藏进程"></a>1. 使用unhide找出隐藏进程</h3><p>先安装unhide <code>apt install unhide</code> 然后执行 <code>unhide proc</code> </p><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu-template:~# unhide proc</span><br><span class="line">Unhide 20130526</span><br><span class="line">Copyright © 2013 Yago Jesus &amp; Patrick Gouin</span><br><span class="line">License GPLv3+ : GNU GPL version 3 or later</span><br><span class="line">http://www.unhide-forensics.info</span><br><span class="line"></span><br><span class="line">NOTE : This version of unhide is for systems using Linux &gt;= 2.6 </span><br><span class="line"></span><br><span class="line">Used options: </span><br><span class="line">[*]Searching for Hidden processes through /proc stat scanning</span><br><span class="line"></span><br><span class="line">Found HIDDEN PID: 1072</span><br><span class="line">        Cmdline: &quot;-bash&quot;</span><br><span class="line">        Executable: &quot;/usr/bin/-bash (deleted)&quot;</span><br><span class="line">        Command: &quot;-bash&quot;</span><br><span class="line">        $USER=root</span><br><span class="line">        $PWD=/root</span><br><span class="line"></span><br><span class="line">Found HIDDEN PID: 1074</span><br><span class="line">        Cmdline: &quot;-bash&quot;</span><br><span class="line">        Executable: &quot;/usr/bin/-bash (deleted)&quot;</span><br><span class="line">        Command: &quot;-bash&quot;</span><br><span class="line">        $USER=root</span><br><span class="line">        $PWD=/root</span><br><span class="line"></span><br><span class="line">Found HIDDEN PID: 1075</span><br><span class="line">        Cmdline: &quot;-bash&quot;</span><br><span class="line">        Executable: &quot;/usr/bin/-bash (deleted)&quot;</span><br><span class="line">        Command: &quot;-bash&quot;</span><br><span class="line">        $USER=root</span><br><span class="line">        $PWD=/root</span><br><span class="line"></span><br><span class="line">Found HIDDEN PID: 1076</span><br><span class="line">        Cmdline: &quot;-bash&quot;</span><br><span class="line">        Executable: &quot;/usr/bin/-bash (deleted)&quot;</span><br><span class="line">        Command: &quot;-bash&quot;</span><br><span class="line">        $USER=root</span><br><span class="line">        $PWD=/root</span><br><span class="line"></span><br><span class="line">Found HIDDEN PID: 1077</span><br><span class="line">        Cmdline: &quot;-bash&quot;</span><br><span class="line">        Executable: &quot;/usr/bin/-bash (deleted)&quot;</span><br><span class="line">        Command: &quot;-bash&quot;</span><br><span class="line">        $USER=root</span><br><span class="line">        $PWD=/root</span><br><span class="line"></span><br><span class="line">Found HIDDEN PID: 1078</span><br><span class="line">        Cmdline: &quot;-bash&quot;</span><br><span class="line">        Executable: &quot;/usr/bin/-bash (deleted)&quot;</span><br><span class="line">        Command: &quot;-bash&quot;</span><br><span class="line">        $USER=root</span><br><span class="line">        $PWD=/root</span><br><span class="line"></span><br><span class="line">Found HIDDEN PID: 1081</span><br><span class="line">        Cmdline: &quot;-bash&quot;</span><br><span class="line">        Executable: &quot;/usr/bin/-bash (deleted)&quot;</span><br><span class="line">        Command: &quot;-bash&quot;</span><br><span class="line">        $USER=root</span><br><span class="line">        $PWD=/root</span><br></pre></td></tr></table></figure><p>好家伙！这么多隐藏进程！</p><p>现在来看这些隐藏进程的细节都是干嘛的。</p><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu-template:~# systemctl status 1072</span><br><span class="line">● session-1.scope - Session 1 of user root</span><br><span class="line">     Loaded: loaded (/run/systemd/transient/session-1.scope; transient)</span><br><span class="line">  Transient: yes</span><br><span class="line">     Active: active (running) since Fri 2024-05-31 16:40:58 CST; 22s ago</span><br><span class="line">      Tasks: 11</span><br><span class="line">     Memory: 29.7M</span><br><span class="line">     CGroup: /user.slice/user-0.slice/session-1.scope</span><br><span class="line">             ├─ 862 sshd: root@pts/0</span><br><span class="line">             ├─1000 -bash</span><br><span class="line">             ├─1072 -bash</span><br><span class="line">             ├─1470 systemctl status 1072</span><br><span class="line">             └─1472 pager</span><br></pre></td></tr></table></figure><h3 id="2-清理隐藏进程的可执行文件和服务"><a href="#2-清理隐藏进程的可执行文件和服务" class="headerlink" title="2. 清理隐藏进程的可执行文件和服务"></a>2. 清理隐藏进程的可执行文件和服务</h3><p>根据<code>unhide</code>和<code>systemctl status</code>的结果，清理隐藏进程的可执行文件和服务。</p><h3 id="3-使用杀毒软件扫描系统确认是否还有可疑文件"><a href="#3-使用杀毒软件扫描系统确认是否还有可疑文件" class="headerlink" title="3. 使用杀毒软件扫描系统确认是否还有可疑文件"></a>3. 使用杀毒软件扫描系统确认是否还有可疑文件</h3><p>这里可以使用<a href="https://www.clamav.net/"><code>ClamAV</code></a>和<a href="https://www.chkrootkit.org/"><code>Chkrootkit</code></a> 、<a href="https://rkhunter.sourceforge.net/"><code>Rootkit Hunter</code></a>等杀毒软件来扫描系统，确认是否还有可疑文件。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 【可选】 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 【可选】 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>解决使用GitHub Pages自定义域名后无法正常申请通配符证书的问题</title>
       <link href="/post/2024/01/02/33430/"/>
       <url>/post/2024/01/02/33430/</url>
@@ -729,9 +754,9 @@
       
         <tags>
             
-            <tag> Golang </tag>
-            
             <tag> Java </tag>
+            
+            <tag> Golang </tag>
             
             <tag> 指针 </tag>
             
