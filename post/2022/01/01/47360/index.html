@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ElasticsSearch伪集群搭建 | Eber的小窝</title><meta name="author" content="eber"><meta name="copyright" content="eber"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ElasticsSearch伪集群搭建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticsSearch伪集群搭建">
+<meta property="og:url" content="https://blog.eber.vip/post/2022/01/01/47360/index.html">
+<meta property="og:site_name" content="Eber的小窝">
+<meta property="og:description" content="ElasticsSearch伪集群搭建">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://up.eber.vip/Think-Me/img/main/upload/enterprise-search-search-bar-pattern-light-1680x980.png">
+<meta property="article:published_time" content="2021-12-31T16:09:13.000Z">
+<meta property="article:modified_time" content="2021-12-31T16:09:13.000Z">
+<meta property="article:author" content="eber">
+<meta property="article:tag" content="ElasticsSearch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://up.eber.vip/Think-Me/img/main/upload/enterprise-search-search-bar-pattern-light-1680x980.png"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://blog.eber.vip/post/2022/01/01/47360/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><meta name="baidu-site-verification" content="codeva-RpsHAjsfoN"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-8820737714769485',
+  enable_page_level_ads: 'true'
+});</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0d87231a10d73d7b43ff2dc95037cb9d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-BWSGWCECKH"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-BWSGWCECKH');
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://unpkg.com/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://unpkg.com/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ElasticsSearch伪集群搭建',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-01 00:09:13'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/icon/eber.vip-modified.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/uptime/"><i class="fa-fw fa-brands fa-watchman-monitoring"></i><span> Uptime</span></a></div><div class="menus_item"><a class="site-page" href="/bing/"><i class="fa-fw fa-solid fa-chart-column"></i><span> Monitor</span></a></div><div class="menus_item"><a class="site-page" href="/kms/"><i class="fa-fw fa-brands fa-windows"></i><span> Kms</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Eber的小窝"><span class="site-name">Eber的小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/uptime/"><i class="fa-fw fa-brands fa-watchman-monitoring"></i><span> Uptime</span></a></div><div class="menus_item"><a class="site-page" href="/bing/"><i class="fa-fw fa-solid fa-chart-column"></i><span> Monitor</span></a></div><div class="menus_item"><a class="site-page" href="/kms/"><i class="fa-fw fa-brands fa-windows"></i><span> Kms</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">ElasticsSearch伪集群搭建</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-31T16:09:13.000Z" title="发表于 2022-01-01 00:09:13">2022-01-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-12-31T16:09:13.000Z" title="更新于 2022-01-01 00:09:13">2022-01-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BC%80%E5%8F%91%E4%B8%8E%E6%B5%8B%E8%AF%95/">开发与测试</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span></div></div></div><article class="post-content" id="article-container"><p><strong>⚠️⚠️⚠️该教程基于docker- compose建立伪集群，仅适用于开发和测试中使用</strong></p>
+<h3 id="1、建立项目目录及各配置文件。"><a href="#1、建立项目目录及各配置文件。" class="headerlink" title="1、建立项目目录及各配置文件。"></a>1、建立项目目录及各配置文件。</h3><ul>
+<li>首先创建一些需要映射的目录：<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~# mkdir -p es/data</span><br><span class="line">root@ubuntu:~# mkdir -p es/logs</span><br><span class="line">root@ubuntu:~# ll es/</span><br><span class="line">total 16</span><br><span class="line">drwxr-xr-x 4 root root 4096 Jan 10 02:25 ./</span><br><span class="line">drwxr-xr-x 4 root root 4096 Jan 10 02:25 ../</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jan 10 02:25 data/</span><br><span class="line">drwxr-xr-x 2 root root 4096 Jan 10 02:25 logs/</span><br><span class="line">root@ubuntu:~#</span><br></pre></td></tr></table></figure></li>
+<li>然后创建docker-compose.yml配置文件<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">es_node0:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">elasticsearch:7.16.2</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">es_node0</span></span><br><span class="line">    <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;ES_JAVA_OPTS=-Xms1g -Xmx1g&quot;</span></span><br><span class="line">    <span class="attr">ulimits:</span></span><br><span class="line">      <span class="attr">memlock:</span></span><br><span class="line">        <span class="attr">soft:</span> <span class="number">-1</span></span><br><span class="line">        <span class="attr">hard:</span> <span class="number">-1</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/es_node0.yml:/usr/share/elasticsearch/config/elasticsearch.yml</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/data/node0:/usr/share/elasticsearch/data</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/logs/node0:/usr/share/elasticsearch/logs</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">29200</span><span class="string">:9200</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">29300</span><span class="string">:9300</span></span><br><span class="line">  <span class="attr">es_node1:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">elasticsearch:7.16.2</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">es_node1</span></span><br><span class="line">    <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;ES_JAVA_OPTS=-Xms1g -Xmx1g&quot;</span></span><br><span class="line">    <span class="attr">ulimits:</span></span><br><span class="line">      <span class="attr">memlock:</span></span><br><span class="line">        <span class="attr">soft:</span> <span class="number">-1</span></span><br><span class="line">        <span class="attr">hard:</span> <span class="number">-1</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/es_node1.yml:/usr/share/elasticsearch/config/elasticsearch.yml</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/data/node1:/usr/share/elasticsearch/data</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/logs/node1:/usr/share/elasticsearch/logs</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">29201</span><span class="string">:9200</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">29301</span><span class="string">:9301</span></span><br><span class="line">  <span class="attr">es_node2:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">elasticsearch:7.16.2</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">es_node2</span></span><br><span class="line">    <span class="attr">privileged:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;ES_JAVA_OPTS=-Xms1g -Xmx1g&quot;</span></span><br><span class="line">    <span class="attr">ulimits:</span></span><br><span class="line">      <span class="attr">memlock:</span></span><br><span class="line">        <span class="attr">soft:</span> <span class="number">-1</span></span><br><span class="line">        <span class="attr">hard:</span> <span class="number">-1</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/es_node2.yml:/usr/share/elasticsearch/config/elasticsearch.yml</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/data/node2:/usr/share/elasticsearch/data</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">$PWD/logs/node2:/usr/share/elasticsearch/logs</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">29202</span><span class="string">:9200</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">29302</span><span class="string">:9302</span></span><br><span class="line">  <span class="attr">kibana:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">kibana:7.16.2</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">kibana</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">SERVER_NAME=kibana</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ELASTICSEARCH_HOSTS=[&quot;http://es_node0:9200&quot;,&quot;http://es_node1:9201&quot;,&quot;http://es_node2:9202&quot;]</span>      </span><br><span class="line">      <span class="bullet">-</span> <span class="string">XPACK_MONITORING_ENABLED=true</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">25601</span><span class="string">:5601</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">es_node0</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>⚠️：因为我的防火墙限制这台机器仅20000-30000端口能开放，所以我的容器端口映射出来都是20000+的端口，你们按照自己的实际情况去配置即可。</p>
+<ul>
+<li><p>node0的配置</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 集群名称，三个节点要一致</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">es-cluster</span></span><br><span class="line"><span class="comment"># 当前节点名称</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">node0</span></span><br><span class="line"><span class="comment"># 是否有资格作为主节点</span></span><br><span class="line"><span class="attr">node.master:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># 是否存储数据</span></span><br><span class="line"><span class="attr">node.data:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># 最⼤集群节点数</span></span><br><span class="line"><span class="attr">node.max_local_storage_nodes:</span> <span class="number">3</span></span><br><span class="line"><span class="comment"># 监听host</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="comment"># 容器内服务端⼝ 默认9200即可</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="comment"># 内部节点之间通信端⼝</span></span><br><span class="line"><span class="attr">transport.tcp.port:</span> <span class="number">9300</span></span><br><span class="line"><span class="comment"># es7.x之后新增的配置，写⼊候选主节点的设备地址，在开启服务后可以被选为主节点</span></span><br><span class="line"><span class="attr">discovery.seed_hosts:</span> [<span class="string">&quot;es_node0:9300&quot;</span>,<span class="string">&quot;es_node1:9301&quot;</span>,<span class="string">&quot;es_node2:9302&quot;</span>]</span><br><span class="line"><span class="comment"># es7.x之后新增的配置，初始化集群时需要此配置来选举master，此处的node名称为各节点配置文件中的节点名称</span></span><br><span class="line"><span class="attr">cluster.initial_master_nodes:</span> [<span class="string">&quot;node0&quot;</span>, <span class="string">&quot;node1&quot;</span>, <span class="string">&quot;node2&quot;</span>]</span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">&quot;*&quot;</span></span><br><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.cors.allow-credentials:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>node1和node2的配置（node1和node2配置基本一致）</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 集群名称 三个节点要一致</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">es-cluster</span></span><br><span class="line"><span class="comment"># 当前节点名称</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">node1</span></span><br><span class="line"><span class="comment"># 是否有资格作为主节点</span></span><br><span class="line"><span class="attr">node.master:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># 是否存储数据</span></span><br><span class="line"><span class="attr">node.data:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># 最⼤集群节点数</span></span><br><span class="line"><span class="attr">node.max_local_storage_nodes:</span> <span class="number">3</span></span><br><span class="line"><span class="comment">#⽹关地址</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="comment"># 端⼝</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9201</span></span><br><span class="line"><span class="comment"># 内部节点之间通信端⼝</span></span><br><span class="line"><span class="attr">transport.tcp.port:</span> <span class="number">9301</span></span><br><span class="line"><span class="comment"># es7.x之后新增的配置，写⼊候选主节点的设备地址，在开启服务后可以被选为主节点</span></span><br><span class="line"><span class="attr">discovery.seed_hosts:</span> [<span class="string">&quot;es_node0:9300&quot;</span>,<span class="string">&quot;es_node1:9301&quot;</span>,<span class="string">&quot;es_node2:9302&quot;</span>]</span><br><span class="line"><span class="comment"># es7.x之后新增的配置，初始化集群时需要此配置来选举master，此处的node名称为各节点配置文件中的节点名称</span></span><br><span class="line"><span class="attr">cluster.initial_master_nodes:</span> [<span class="string">&quot;node0&quot;</span>, <span class="string">&quot;node1&quot;</span>, <span class="string">&quot;node2&quot;</span>]</span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">&quot;*&quot;</span></span><br><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.cors.allow-credentials:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2、启动和安装ik分词器"><a href="#2、启动和安装ik分词器" class="headerlink" title="2、启动和安装ik分词器"></a>2、启动和安装ik分词器</h3><ul>
+<li>启动</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker-compose up</span><br></pre></td></tr></table></figure>
+
+<p>教你们一个骚操作：我们这里直接是使用<code>up</code>启动并没有带上<code>-d</code>参数后台启动，这样就不用执行查看日志的命令就可以第一时间直接看见启动日志。什么？ 你问我这样启动之后怎么后台运行？ <strong>直接关掉当前这个终端即可</strong>，这个是我2019年的时候发现的<code>docker-compose</code>与其他持续运行软件的差异。</p>
+<ul>
+<li>安装ik分词器(一共三个容器每次替换掉容器名称&#x2F;容器ID 执行三次即可)<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~# docker exec -ti es_node0 ./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.16.2/elasticsearch-analysis-ik-7.16.2.zip</span><br><span class="line">root@ubuntu:~# docker restart es_node0</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>✋：这一步操作实际上可以在Dockerfile中操作。</p>
+<h3 id="3、查询集群状态"><a href="#3、查询集群状态" class="headerlink" title="3、查询集群状态"></a>3、查询集群状态</h3><ul>
+<li>推荐使用Chrome的<a target="_blank" rel="noopener external nofollow noreferrer" href="https://chrome.google.com/webstore/detail/elasticsearch-head/ffmkiejjmecolpfloofpjologoblkegm?utm_source=chrome-ntp-icon">ElasticSearch Head</a>插件，有条件的可以直接点击跳转到下载页面进行安装。</li>
+<li>没有网络条件的可以<a target="_blank" rel="noopener" href="https://up.eber.vip/Think-Me/img/main/2022/01/ElasticSearch_Head_0.1.5.0.crx">点击此处</a>下载然后再手动进行离线安装【一般是打开插件管理的开发者模式然后直接把crx文件拖进去，如果不行请搜索一下教程】。</li>
+</ul>
+<p>插件打开后填入链接地址即可连接ES并展示出状态信息如下所示：<br><img src="https://up.eber.vip/Think-Me/img/main/2022/01/20220110150847.png"></p>
+<h3 id="3、可能遇到的问题"><a href="#3、可能遇到的问题" class="headerlink" title="3、可能遇到的问题"></a>3、可能遇到的问题</h3><p>1、Error opening log file ‘logs&#x2F;gc.log’: Permission denied</p>
+<p>可能会报这种权限不足的情况，这种情况下想简单点就直接<code>chmod -R 777 ./logs</code>将logs目录设置成所有用户可读写即可。</p>
+<p>2、max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]</p>
+<p>这个是提示你的内核参数vm.max_map_count设置的过低，直接按照提示修改即可。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~# vi /etc/sysctl.conf</span><br><span class="line">vm.max_map_count = 655300 # 文件末尾添加该项保存即可</span><br><span class="line"></span><br><span class="line">root@ubuntu:~# sysctl -p </span><br></pre></td></tr></table></figure>
+
+<p>内核参数生效后重新启动docker-compose即可。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.eber.vip">eber</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.eber.vip/post/2022/01/01/47360/">https://blog.eber.vip/post/2022/01/01/47360/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.eber.vip" target="_blank">Eber的小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ElasticsSearch/">ElasticsSearch</a></div><div class="post_share"><div class="social-share" data-image="https://up.eber.vip/Think-Me/img/main/upload/enterprise-search-search-bar-pattern-light-1680x980.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/icon/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/icon/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/icon/alipay.png" target="_blank"><img class="post-qr-code-img" src="/icon/alipay.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/2021/12/31/50729/" title="两步实现在Ubuntu18,20等高版本设置静态IP"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/20211229222857.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">两步实现在Ubuntu18,20等高版本设置静态IP</div></div></a></div><div class="next-post pull-right"><a href="/post/2022/01/09/47231/" title="使用火焰图分析CPU使用情况"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/2022/01/20220110174720.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">使用火焰图分析CPU使用情况</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/icon/eber.vip-modified.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">eber</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/think-me" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:admin@eber.vip" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">你可以躲在角落里沉默，但是不要诋毁和嘲笑比你勇敢的人，因为他们争取到的光明也许会照耀到你！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%BB%BA%E7%AB%8B%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E5%8F%8A%E5%90%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">1、建立项目目录及各配置文件。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E5%90%AF%E5%8A%A8%E5%92%8C%E5%AE%89%E8%A3%85ik%E5%88%86%E8%AF%8D%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">2、启动和安装ik分词器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E6%9F%A5%E8%AF%A2%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81"><span class="toc-number">3.</span> <span class="toc-text">3、查询集群状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">3、可能遇到的问题</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/2024/09/23/54073/" title="加入HSTS预加载列表"><img src="/../img/acme/hsts.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="加入HSTS预加载列表"/></a><div class="content"><a class="title" href="/post/2024/09/23/54073/" title="加入HSTS预加载列表">加入HSTS预加载列表</a><time datetime="2024-09-23T12:13:23.000Z" title="发表于 2024-09-23 20:13:23">2024-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/2024/09/08/5970/" title="定制自己的OpenWrt固件"><img src="/../img/openwrt/1001725893247_.pic_hd.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="定制自己的OpenWrt固件"/></a><div class="content"><a class="title" href="/post/2024/09/08/5970/" title="定制自己的OpenWrt固件">定制自己的OpenWrt固件</a><time datetime="2024-09-08T03:20:19.000Z" title="发表于 2024-09-08 11:20:19">2024-09-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/2024/05/31/56177/" title="揪出隐藏的病毒进程"><img src="/../img/linux/4a13dfc93377.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="揪出隐藏的病毒进程"/></a><div class="content"><a class="title" href="/post/2024/05/31/56177/" title="揪出隐藏的病毒进程">揪出隐藏的病毒进程</a><time datetime="2024-05-31T10:55:12.000Z" title="发表于 2024-05-31 18:55:12">2024-05-31</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2017 - 2024 By eber <a target="_blank" href="https://beian.miit.gov.cn" rel="external nofollow noreferrer">豫ICP备2021035851号-1</a></div><div class="footer_custom_text">本网站由 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral"><img src="https://blog.eber.vip/icon/upyun.png" align="absmiddle" width="59px" height="30px"></a> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cloudflare.com"><img src="https://blog.eber.vip/icon/cloudflare.svg" align="absmiddle" width="100px" height="30px"></a> 联合提供加速服务</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.8.1/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.8.1/js/main.min.js"></script><script src="https://unpkg.com/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><div class="js-pjax"><script>function getGiscusTheme () {
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+}
+
+function loadGiscus () {
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'Think-Me/Think-Me.github.io',
+    'data-repo-id': 'MDEwOlJlcG9zaXRvcnkyMTI5OTc2MjY=',
+    'data-category-id': 'DIC_kwDODLIV-s4Cghd6',
+    'data-mapping': 'pathname',
+    'data-theme': getGiscusTheme(),
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },{"data-mapping":"title","data-input-position":"top","data-loading":"lazy","data-reactions_enabled":1,"crossorigin":"anonymous","data-lang":"zh-CN","data-emit-metadata":0})
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame')
+    if (!iframe) return
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: getGiscusTheme()
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !true) {
+  if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script src="https://unpkg.com/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.8.1/js/search/local-search.min.js"></script></div></div></body></html>

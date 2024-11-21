@@ -1,0 +1,299 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>磁盘文件系统---inode | Eber的小窝</title><meta name="author" content="eber"><meta name="copyright" content="eber"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="article">
+<meta property="og:title" content="磁盘文件系统---inode">
+<meta property="og:url" content="https://blog.eber.vip/post/2021/11/20/57183/index.html">
+<meta property="og:site_name" content="Eber的小窝">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://up.eber.vip/Think-Me/img/main/upload/3787390984.jpg">
+<meta property="article:published_time" content="2021-11-20T03:28:01.000Z">
+<meta property="article:modified_time" content="2024-11-21T06:27:49.452Z">
+<meta property="article:author" content="eber">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="PVE">
+<meta property="article:tag" content="inode">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://up.eber.vip/Think-Me/img/main/upload/3787390984.jpg"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://blog.eber.vip/post/2021/11/20/57183/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><meta name="baidu-site-verification" content="codeva-RpsHAjsfoN"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-8820737714769485',
+  enable_page_level_ads: 'true'
+});</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0d87231a10d73d7b43ff2dc95037cb9d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-BWSGWCECKH"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-BWSGWCECKH');
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://unpkg.com/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://unpkg.com/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '磁盘文件系统---inode',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-21 14:27:49'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/icon/eber.vip-modified.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/uptime/"><i class="fa-fw fa-brands fa-watchman-monitoring"></i><span> Uptime</span></a></div><div class="menus_item"><a class="site-page" href="/bing/"><i class="fa-fw fa-solid fa-chart-column"></i><span> Monitor</span></a></div><div class="menus_item"><a class="site-page" href="/kms/"><i class="fa-fw fa-brands fa-windows"></i><span> Kms</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Eber的小窝"><span class="site-name">Eber的小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/uptime/"><i class="fa-fw fa-brands fa-watchman-monitoring"></i><span> Uptime</span></a></div><div class="menus_item"><a class="site-page" href="/bing/"><i class="fa-fw fa-solid fa-chart-column"></i><span> Monitor</span></a></div><div class="menus_item"><a class="site-page" href="/kms/"><i class="fa-fw fa-brands fa-windows"></i><span> Kms</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">磁盘文件系统---inode</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-20T03:28:01.000Z" title="发表于 2021-11-20 11:28:01">2021-11-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-21T06:27:49.452Z" title="更新于 2024-11-21 14:27:49">2024-11-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%AE%89%E5%85%A8%E4%B8%8E%E8%BF%90%E7%BB%B4/">安全与运维</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span></div></div></div><article class="post-content" id="article-container"><h3 id="1、理解inode，首先要了解文件在硬盘上的储存规则。"><a href="#1、理解inode，首先要了解文件在硬盘上的储存规则。" class="headerlink" title="1、理解inode，首先要了解文件在硬盘上的储存规则。"></a>1、理解inode，首先要了解文件在硬盘上的储存规则。</h3><p>文件储存在硬盘上，硬盘的最小存储单位叫做”扇区”（Sector）。每个扇区储存512字节（相当于0.5KB）。</p>
+<p>操作系统读取硬盘的时候，不会一个个扇区地读取，这样效率太低，而是一次性连续读取多个扇区，即一次性读取一个”块”（block）。这种由多个扇区组成的”块”，是文件存取的最小单位。”块”的大小，最常见的是4KB，即连续八个 sector组成一个 block。</p>
+<p>文件数据都储存在”块”中，那么很显然，我们还必须找到一个地方储存文件的元信息，比如文件的创建者、文件的创建日期、文件的大小等等。这种储存文件元信息的区域就叫做inode，中文译名为”索引节点”。</p>
+<h3 id="2、了解inode的内容"><a href="#2、了解inode的内容" class="headerlink" title="2、了解inode的内容"></a>2、了解inode的内容</h3><p>inode包含文件的元信息，具体来说有以下内容：</p>
+<p>* 文件的字节数</p>
+<p>* 文件拥有者的User ID</p>
+<p>* 文件的Group ID</p>
+<p>* 文件的读、写、执行权限</p>
+<p>* 文件的时间戳，共有三个：ctime指inode创建时间，mtime指文件内容上一次修改的时间，atime指文件最后一次访问的时间。</p>
+<p>* 链接数，即有多少文件名指向这个inode</p>
+<p>* 文件数据block的位置</p>
+<p>可以用stat命令，查看某个文件的inode信息：</p>
+<p>stat example.txt</p>
+<p>总之，除了文件名以外的所有文件信息，都存在inode之中。至于为什么没有文件名，下文会有详细解释。</p>
+<h3 id="3、常规文件系统中inode的大小"><a href="#3、常规文件系统中inode的大小" class="headerlink" title="3、常规文件系统中inode的大小"></a>3、常规文件系统中inode的大小</h3><p>inode也会消耗硬盘空间，所以硬盘格式化的时候，操作系统自动将硬盘分成两个区域。一个是数据区，存放文件数据；另一个是inode区（inode table），存放inode所包含的信息。</p>
+<p>每个inode节点的大小，一般是128字节或256字节。inode节点的总数，在格式化时就给定，一般是每1KB或每2KB就设置一个inode。假定在一块1GB的硬盘中，每个inode节点的大小为128字节，每1KB就设置一个inode，那么就有1048576个inode，inode table的大小就会达到128MB，占整块硬盘的12.8%。</p>
+<p>查看每个硬盘分区的inode总数和已经使用的数量，可以使用df命令。</p>
+<p>df -i</p>
+<p>查看每个inode节点的大小，可以用如下命令：</p>
+<p>sudo dumpe2fs -h &#x2F;dev&#x2F;hda | grep “Inode size”</p>
+<p>由于每个文件都必须有一个inode，因此有可能发生inode已经用光，但是硬盘还未存满的情况。这时，就无法在硬盘上创建新文件。</p>
+<h3 id="4、inode号码"><a href="#4、inode号码" class="headerlink" title="4、inode号码"></a>4、inode号码</h3><p>每个inode都有一个号码，操作系统用inode号码来识别不同的文件。</p>
+<p>这里值得重复一遍，Unix&#x2F;Linux系统内部不使用文件名，而使用inode号码来识别文件。对于系统来说，文件名只是inode号码便于识别的别称或者绰号。表面上，用户通过文件名，打开文件。实际上，系统内部这个过程分成三步：首先，系统找到这个文件名对应的inode号码；其次，通过inode号码，获取inode信息；最后，根据inode信息，找到文件数据所在的block，读出数据。</p>
+<p>使用ls -i命令，可以看到文件名对应的inode号码：</p>
+<p>ls -i example.txt</p>
+<h3 id="5、目录文件"><a href="#5、目录文件" class="headerlink" title="5、目录文件"></a>5、目录文件</h3><p>Unix&#x2F;Linux系统中，目录（directory）也是一种文件。打开目录，实际上就是打开目录文件。</p>
+<p>目录文件的结构非常简单，就是一系列目录项（dirent）的列表。每个目录项，由两部分组成：所包含文件的文件名，以及该文件名对应的inode号码。</p>
+<p>ls命令只列出目录文件中的所有文件名：</p>
+<p>ls &#x2F;etc</p>
+<p>ls -i命令列出整个目录文件，即文件名和inode号码：</p>
+<p>ls -i &#x2F;etc</p>
+<p>如果要查看文件的详细信息，就必须根据inode号码，访问inode节点，读取信息。ls -l命令列出文件的详细信息。</p>
+<p>ls -l &#x2F;etc</p>
+<h3 id="6、硬链接"><a href="#6、硬链接" class="headerlink" title="6、硬链接"></a>6、硬链接</h3><p>一般情况下，文件名和inode号码是”一一对应”关系，每个inode号码对应一个文件名。但是，Unix&#x2F;Linux系统允许，多个文件名指向同一个inode号码。这意味着，可以用不同的文件名访问同样的内容；对文件内容进行修改，会影响到所有文件名；但是，删除一个文件名，不影响另一个文件名的访问。这种情况就被称为”硬链接”（hard link）。</p>
+<p>ln命令可以创建硬链接：</p>
+<p>ln 源文件 目标文件</p>
+<p>运行上面这条命令以后，源文件与目标文件的inode号码相同，都指向同一个inode。inode信息中有一项叫做”链接数”，记录指向该inode的文件名总数，这时就会增加1。反过来，删除一个文件名，就会使得inode节点中的”链接数”减1。当这个值减到0，表明没有文件名指向这个inode，系统就会回收这个inode号码，以及其所对应block区域。</p>
+<p>这里顺便说一下目录文件的”链接数”。创建目录时，默认会生成两个目录项：”.”和”..”。前者的inode号码就是当前目录的inode号码，等同于当前目录的”硬链接”；后者的inode号码就是当前目录的父目录的inode号码，等同于父目录的”硬链接”。所以，任何一个目录的”硬链接”总数，总是等于2加上它的子目录总数（含隐藏目录）,这里的2是父目录对其的“硬链接”和当前目录下的”.硬链接“。</p>
+<h3 id="7、软链接"><a href="#7、软链接" class="headerlink" title="7、软链接"></a>7、软链接</h3><p>除了硬链接以外，还有一种特殊情况。文件A和文件B的inode号码虽然不一样，但是文件A的内容是文件B的路径。读取文件A时，系统会自动将访问者导向文件B。因此，无论打开哪一个文件，最终读取的都是文件B。这时，文件A就称为文件B的”软链接”（soft link）或者”符号链接（symbolic link）。</p>
+<p>这意味着，文件A依赖于文件B而存在，如果删除了文件B，打开文件A就会报错：”No such file or directory”。这是软链接与硬链接最大的不同：文件A指向文件B的文件名，而不是文件B的inode号码，文件B的inode”链接数”不会因此发生变化。</p>
+<p>ln -s命令可以创建软链接。</p>
+<p>ln -s 源文文件或目录 目标文件或目录</p>
+<h3 id="8、inode的特殊作用"><a href="#8、inode的特殊作用" class="headerlink" title="8、inode的特殊作用"></a>8、inode的特殊作用</h3><p>由于inode号码与文件名分离，这种机制导致了一些Unix&#x2F;Linux系统特有的现象。</p>
+<p>1. 有时，文件名包含特殊字符，无法正常删除。这时，直接删除inode节点，就能起到删除文件的作用。</p>
+<p>2. 移动文件或重命名文件，只是改变文件名，不影响inode号码。</p>
+<p>3. 打开一个文件以后，系统就以inode号码来识别这个文件，不再考虑文件名。因此，通常来说，系统无法从inode号码得知文件名。</p>
+<p>第3点使得软件更新变得简单，可以在不关闭软件的情况下进行更新，不需要重启。因为系统通过inode号码，识别运行中的文件，不通过文件名。更新的时候，新版文件以同样的文件名，生成一个新的inode，不会影响到运行中的文件。等到下一次运行这个软件的时候，文件名就自动指向新版文件，旧版文件的inode则被回收。</p>
+<h3 id="9-实际问题"><a href="#9-实际问题" class="headerlink" title="9 实际问题"></a>9 实际问题</h3><p>在一台配置较低的Linux服务器（内存、硬盘比较小）的&#x2F;data分区内创建文件时，系统提示磁盘空间不足，用df -h命令查看了一下磁盘使用情况，发现&#x2F;data分区只使用了66%，还有12G的剩余空间，按理说不会出现这种问题。 后来用df -i查看了一下&#x2F;data分区的索引节点(inode)，发现已经用满(IUsed&#x3D;100%)，导致系统无法创建新目录和文件。 </p>
+<p>查找原因：</p>
+<p>&#x2F;data&#x2F;cache目录中存在数量非常多的小字节缓存文件，占用的Block不多，但是占用了大量的inode。 </p>
+<p>解决方案：</p>
+<p>1.删除&#x2F;data&#x2F;cache目录中的部分文件，释放出&#x2F;data分区的一部分inode。</p>
+<p>2.使用软连接将空闲分区&#x2F;opt中的newcache目录连接到&#x2F;data&#x2F;cache，使用&#x2F;opt分区的inode来缓解&#x2F;data分区inode不足的问题: <code>ln -s /opt/newcache /data/cache</code></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.eber.vip">eber</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.eber.vip/post/2021/11/20/57183/">https://blog.eber.vip/post/2021/11/20/57183/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.eber.vip" target="_blank">Eber的小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/PVE/">PVE</a><a class="post-meta__tags" href="/tags/inode/">inode</a></div><div class="post_share"><div class="social-share" data-image="https://up.eber.vip/Think-Me/img/main/upload/3787390984.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/icon/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/icon/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/icon/alipay.png" target="_blank"><img class="post-qr-code-img" src="/icon/alipay.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/2021/11/15/13822/" title="OpenLiteSpeed的常用重写规则和头部操作"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/openlitespeed.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">OpenLiteSpeed的常用重写规则和头部操作</div></div></a></div><div class="next-post pull-right"><a href="/post/2021/12/05/49759/" title="Nginx的动静态gzip压缩配置及参数详解"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/nginx.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Nginx的动静态gzip压缩配置及参数详解</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/2023/12/25/14212/" title="Overlay文件系统"><img class="cover" src="/../img/Overlay%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/overlay.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-25</div><div class="title">Overlay文件系统</div></div></a></div><div><a href="/post/2021/12/31/50729/" title="两步实现在Ubuntu18,20等高版本设置静态IP"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/20211229222857.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-31</div><div class="title">两步实现在Ubuntu18,20等高版本设置静态IP</div></div></a></div><div><a href="/post/2022/01/09/47231/" title="使用火焰图分析CPU使用情况"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/2022/01/20220110174720.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-09</div><div class="title">使用火焰图分析CPU使用情况</div></div></a></div><div><a href="/post/2022/04/16/29640/" title="关于limits不生效的问题"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/20211229222857.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-16</div><div class="title">关于limits不生效的问题</div></div></a></div><div><a href="/post/2018/07/18/64524/" title="小白玩转Linux的必备技能——入门篇"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/debian-logo-1024x576.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-07-18</div><div class="title">小白玩转Linux的必备技能——入门篇</div></div></a></div><div><a href="/post/2018/07/29/60762/" title="小白玩转Linux的必备技能——进阶篇"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/linux-vs-ubuntu.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-07-29</div><div class="title">小白玩转Linux的必备技能——进阶篇</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/icon/eber.vip-modified.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">eber</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/think-me" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:admin@eber.vip" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">你可以躲在角落里沉默，但是不要诋毁和嘲笑比你勇敢的人，因为他们争取到的光明也许会照耀到你！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E7%90%86%E8%A7%A3inode%EF%BC%8C%E9%A6%96%E5%85%88%E8%A6%81%E4%BA%86%E8%A7%A3%E6%96%87%E4%BB%B6%E5%9C%A8%E7%A1%AC%E7%9B%98%E4%B8%8A%E7%9A%84%E5%82%A8%E5%AD%98%E8%A7%84%E5%88%99%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">1、理解inode，首先要了解文件在硬盘上的储存规则。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E4%BA%86%E8%A7%A3inode%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">2.</span> <span class="toc-text">2、了解inode的内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E5%B8%B8%E8%A7%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B8%ADinode%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="toc-number">3.</span> <span class="toc-text">3、常规文件系统中inode的大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81inode%E5%8F%B7%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">4、inode号码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%E3%80%81%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">5、目录文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6%E3%80%81%E7%A1%AC%E9%93%BE%E6%8E%A5"><span class="toc-number">6.</span> <span class="toc-text">6、硬链接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7%E3%80%81%E8%BD%AF%E9%93%BE%E6%8E%A5"><span class="toc-number">7.</span> <span class="toc-text">7、软链接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8%E3%80%81inode%E7%9A%84%E7%89%B9%E6%AE%8A%E4%BD%9C%E7%94%A8"><span class="toc-number">8.</span> <span class="toc-text">8、inode的特殊作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E5%AE%9E%E9%99%85%E9%97%AE%E9%A2%98"><span class="toc-number">9.</span> <span class="toc-text">9 实际问题</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/2024/09/23/54073/" title="加入HSTS预加载列表"><img src="/../img/acme/hsts.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="加入HSTS预加载列表"/></a><div class="content"><a class="title" href="/post/2024/09/23/54073/" title="加入HSTS预加载列表">加入HSTS预加载列表</a><time datetime="2024-09-23T12:13:23.000Z" title="发表于 2024-09-23 20:13:23">2024-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/2024/09/08/5970/" title="定制自己的OpenWrt固件"><img src="/../img/openwrt/1001725893247_.pic_hd.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="定制自己的OpenWrt固件"/></a><div class="content"><a class="title" href="/post/2024/09/08/5970/" title="定制自己的OpenWrt固件">定制自己的OpenWrt固件</a><time datetime="2024-09-08T03:20:19.000Z" title="发表于 2024-09-08 11:20:19">2024-09-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/2024/05/31/56177/" title="揪出隐藏的病毒进程"><img src="/../img/linux/4a13dfc93377.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="揪出隐藏的病毒进程"/></a><div class="content"><a class="title" href="/post/2024/05/31/56177/" title="揪出隐藏的病毒进程">揪出隐藏的病毒进程</a><time datetime="2024-05-31T10:55:12.000Z" title="发表于 2024-05-31 18:55:12">2024-05-31</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2017 - 2024 By eber <a target="_blank" href="https://beian.miit.gov.cn" rel="external nofollow noreferrer">豫ICP备2021035851号-1</a></div><div class="footer_custom_text">本网站由 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral"><img src="https://blog.eber.vip/icon/upyun.png" align="absmiddle" width="59px" height="30px"></a> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cloudflare.com"><img src="https://blog.eber.vip/icon/cloudflare.svg" align="absmiddle" width="100px" height="30px"></a> 联合提供加速服务</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.8.1/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.8.1/js/main.min.js"></script><script src="https://unpkg.com/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><div class="js-pjax"><script>function getGiscusTheme () {
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+}
+
+function loadGiscus () {
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'Think-Me/Think-Me.github.io',
+    'data-repo-id': 'MDEwOlJlcG9zaXRvcnkyMTI5OTc2MjY=',
+    'data-category-id': 'DIC_kwDODLIV-s4Cghd6',
+    'data-mapping': 'pathname',
+    'data-theme': getGiscusTheme(),
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },{"data-mapping":"title","data-input-position":"top","data-loading":"lazy","data-reactions_enabled":1,"crossorigin":"anonymous","data-lang":"zh-CN","data-emit-metadata":0})
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame')
+    if (!iframe) return
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: getGiscusTheme()
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !true) {
+  if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script src="https://unpkg.com/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.8.1/js/search/local-search.min.js"></script></div></div></body></html>

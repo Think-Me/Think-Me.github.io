@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Java项目四步排查CPU占用高的问题 | Eber的小窝</title><meta name="author" content="eber"><meta name="copyright" content="eber"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="java项目排查cpu占用高的问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java项目四步排查CPU占用高的问题">
+<meta property="og:url" content="https://blog.eber.vip/post/2022/02/12/47604/index.html">
+<meta property="og:site_name" content="Eber的小窝">
+<meta property="og:description" content="java项目排查cpu占用高的问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://up.eber.vip/Think-Me/img/main/upload/java.jpg">
+<meta property="article:published_time" content="2022-02-12T09:42:28.000Z">
+<meta property="article:modified_time" content="2022-02-12T09:42:28.000Z">
+<meta property="article:author" content="eber">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://up.eber.vip/Think-Me/img/main/upload/java.jpg"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://blog.eber.vip/post/2022/02/12/47604/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//hm.baidu.com"/><meta name="baidu-site-verification" content="codeva-RpsHAjsfoN"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-8820737714769485',
+  enable_page_level_ads: 'true'
+});</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0d87231a10d73d7b43ff2dc95037cb9d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-BWSGWCECKH"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-BWSGWCECKH');
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://unpkg.com/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://unpkg.com/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java项目四步排查CPU占用高的问题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-02-12 17:42:28'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/icon/eber.vip-modified.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/uptime/"><i class="fa-fw fa-brands fa-watchman-monitoring"></i><span> Uptime</span></a></div><div class="menus_item"><a class="site-page" href="/bing/"><i class="fa-fw fa-solid fa-chart-column"></i><span> Monitor</span></a></div><div class="menus_item"><a class="site-page" href="/kms/"><i class="fa-fw fa-brands fa-windows"></i><span> Kms</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Eber的小窝"><span class="site-name">Eber的小窝</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/uptime/"><i class="fa-fw fa-brands fa-watchman-monitoring"></i><span> Uptime</span></a></div><div class="menus_item"><a class="site-page" href="/bing/"><i class="fa-fw fa-solid fa-chart-column"></i><span> Monitor</span></a></div><div class="menus_item"><a class="site-page" href="/kms/"><i class="fa-fw fa-brands fa-windows"></i><span> Kms</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Java项目四步排查CPU占用高的问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-12T09:42:28.000Z" title="发表于 2022-02-12 17:42:28">2022-02-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-02-12T09:42:28.000Z" title="更新于 2022-02-12 17:42:28">2022-02-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BC%80%E5%8F%91%E4%B8%8E%E6%B5%8B%E8%AF%95/">开发与测试</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">768</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span></div></div></div><article class="post-content" id="article-container"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>不止一次写过CPU飙高的问题排查(当时并不仅限于Java)，不过由于各种原因这个小破站换了N多个虚拟主机、服务器、域名等中间丢失了很多珍贵的原创博客。最近闲暇的时候看了一下仅存的2018年写的一篇垃圾水文😂当时没有图文并茂的去展现整个流程，今天重新以图文的方式记录一遍。</p>
+<h2 id="实战准备"><a href="#实战准备" class="headerlink" title="实战准备"></a>实战准备</h2><p>首先使用micronaut快速生成一个项目：<code>mn create-app example.micronaut.complete</code></p>
+<p>⚠️ 这个Micronaut是Java微服务框架的一种，可类比springboot，具体的你可以上网找资料看一下。这里不展开讨论，这里使用它的原因是因为它比较快。。。仅此而已👌。 当然了，你也可以用springboot或其他你喜欢的方式生成一个死循环接口。</p>
+<p>然后创建controller类，写类似下面这种死循环的请求接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> example.micronaut;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.micronaut.http.MediaType;</span><br><span class="line"><span class="keyword">import</span> io.micronaut.http.annotation.Controller;</span><br><span class="line"><span class="keyword">import</span> io.micronaut.http.annotation.Get;</span><br><span class="line"><span class="keyword">import</span> io.micronaut.http.annotation.Produces;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Controller(&quot;/test&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DemoController</span> &#123;</span><br><span class="line">    <span class="meta">@Get</span></span><br><span class="line">    <span class="meta">@Produces(MediaType.TEXT_PLAIN)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">index</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &gt; -<span class="number">1</span> ; i++) &#123; <span class="comment">// 这里 i &gt; -1 始终为true</span></span><br><span class="line">            System.out.println(i * i++); <span class="comment">// 这里随便写个计算 并打印输出</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最后打个jar包放到Linux服务器上运行，在浏览器中请求test接口去触发死循环。</p>
+<p><img src="https://up.eber.vip/Think-Me/img/main/upload/202202171703894.png"></p>
+<p>终端会持续输出计算结果，如果该Linux服务配置较低不出意外的话现在已经比较卡了。</p>
+<h2 id="1、首先祭出大杀器：top"><a href="#1、首先祭出大杀器：top" class="headerlink" title="1、首先祭出大杀器：top"></a>1、首先祭出大杀器：top</h2><p>Linux中top命令用于实时显示 process 的动态。(引用自<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.runoob.com/linux/linux-comm-top.html">runoob</a>)</p>
+<p>直接执行<code>top</code>命令然后<code>shift + p</code>按照<code>%CPU</code>去排序</p>
+<p><img src="https://up.eber.vip/Think-Me/img/main/upload/202202171712507.png"></p>
+<p>这时我们发现<code>PID</code>为<code>605108</code>的Java进程CPU占用开始飙高。</p>
+<h2 id="2、其次再利用top：top-p-PID-H"><a href="#2、其次再利用top：top-p-PID-H" class="headerlink" title="2、其次再利用top：top -p PID -H"></a>2、其次再利用top：top -p PID -H</h2><p>这一步我们来查询这个Java进程中哪个线程的CPU占用在飙高。</p>
+<p><img src="https://up.eber.vip/Think-Me/img/main/upload/202202171713900.png"></p>
+<p>这个地方显示<code>PID</code>为<code>605162</code>的线程CPU在飙高。</p>
+<h2 id="3、再次祭出另外一个大杀器：jstack"><a href="#3、再次祭出另外一个大杀器：jstack" class="headerlink" title="3、再次祭出另外一个大杀器：jstack"></a>3、再次祭出另外一个大杀器：jstack</h2><p>使用<code>jstack PID &gt; 1.txt</code>将堆栈信息保存到1.txt。</p>
+<ul>
+<li>注意这里的PID是Java进程的PID而不是线程的。</li>
+<li>顺带着将605162转换为16进制(最后一行root前的<code>93bea</code>即为转换结果)。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~<span class="comment"># jstack 605108 &gt; 1.txt</span></span><br><span class="line">root@ubuntu:~<span class="comment"># printf &quot;%x&quot; 605162</span></span><br><span class="line">93bearoot@ubuntu:~<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+
+<p>⚠️ 这里的”%x”是格式化为16进制的意思，你可以通过任何你喜欢的方式转换，甚至电脑上的程序员计算器都行。</p>
+<h2 id="4、最后分析文件找出”水鬼”"><a href="#4、最后分析文件找出”水鬼”" class="headerlink" title="4、最后分析文件找出”水鬼”"></a>4、最后分析文件找出”水鬼”</h2><p>用<code>vim</code>打开文件并搜索<code>93bea</code></p>
+<p><img src="https://up.eber.vip/Think-Me/img/main/upload/202202171721032.png"></p>
+<p>我们发现下面这么一行描述。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">at example.micronaut.DemoController.index(DemoController.java:14)</span><br></pre></td></tr></table></figure>
+
+<p>在example.micronaut.DemoController类中index方法第14行这么一个信息。</p>
+<p>那么我们去找一下刚才我们写的方法，看看问题是不是在14附近。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(i * i++);</span><br></pre></td></tr></table></figure>
+
+<p>经过代码中的查找我们发现确实我们当时创建的死循环执行就是在这里。</p>
+<p>✖️ OK，这就是今天带来的四步排查法。是不是很简单？</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.eber.vip">eber</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.eber.vip/post/2022/02/12/47604/">https://blog.eber.vip/post/2022/02/12/47604/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.eber.vip" target="_blank">Eber的小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a></div><div class="post_share"><div class="social-share" data-image="https://up.eber.vip/Think-Me/img/main/upload/java.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/icon/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/icon/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/icon/alipay.png" target="_blank"><img class="post-qr-code-img" src="/icon/alipay.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/2022/02/06/37649/" title="从一个请求到互联网协议"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/202202161514843.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">从一个请求到互联网协议</div></div></a></div><div class="next-post pull-right"><a href="/post/2022/02/20/24919/" title="acme.sh踩坑记录"><img class="cover" src="/../img/acme/acme.sh-ssl_00-680x366.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">acme.sh踩坑记录</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/2022/02/02/5147/" title="指针漫谈"><img class="cover" src="https://up.eber.vip/Think-Me/img/main/upload/202202131756296.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-02</div><div class="title">指针漫谈</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/icon/eber.vip-modified.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">eber</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/think-me" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:admin@eber.vip" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">你可以躲在角落里沉默，但是不要诋毁和嘲笑比你勇敢的人，因为他们争取到的光明也许会照耀到你！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text">实战准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E9%A6%96%E5%85%88%E7%A5%AD%E5%87%BA%E5%A4%A7%E6%9D%80%E5%99%A8%EF%BC%9Atop"><span class="toc-number">3.</span> <span class="toc-text">1、首先祭出大杀器：top</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E5%85%B6%E6%AC%A1%E5%86%8D%E5%88%A9%E7%94%A8top%EF%BC%9Atop-p-PID-H"><span class="toc-number">4.</span> <span class="toc-text">2、其次再利用top：top -p PID -H</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E5%86%8D%E6%AC%A1%E7%A5%AD%E5%87%BA%E5%8F%A6%E5%A4%96%E4%B8%80%E4%B8%AA%E5%A4%A7%E6%9D%80%E5%99%A8%EF%BC%9Ajstack"><span class="toc-number">5.</span> <span class="toc-text">3、再次祭出另外一个大杀器：jstack</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E6%9C%80%E5%90%8E%E5%88%86%E6%9E%90%E6%96%87%E4%BB%B6%E6%89%BE%E5%87%BA%E2%80%9D%E6%B0%B4%E9%AC%BC%E2%80%9D"><span class="toc-number">6.</span> <span class="toc-text">4、最后分析文件找出”水鬼”</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/2024/09/23/54073/" title="加入HSTS预加载列表"><img src="/../img/acme/hsts.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="加入HSTS预加载列表"/></a><div class="content"><a class="title" href="/post/2024/09/23/54073/" title="加入HSTS预加载列表">加入HSTS预加载列表</a><time datetime="2024-09-23T12:13:23.000Z" title="发表于 2024-09-23 20:13:23">2024-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/2024/09/08/5970/" title="定制自己的OpenWrt固件"><img src="/../img/openwrt/1001725893247_.pic_hd.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="定制自己的OpenWrt固件"/></a><div class="content"><a class="title" href="/post/2024/09/08/5970/" title="定制自己的OpenWrt固件">定制自己的OpenWrt固件</a><time datetime="2024-09-08T03:20:19.000Z" title="发表于 2024-09-08 11:20:19">2024-09-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/2024/05/31/56177/" title="揪出隐藏的病毒进程"><img src="/../img/linux/4a13dfc93377.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="揪出隐藏的病毒进程"/></a><div class="content"><a class="title" href="/post/2024/05/31/56177/" title="揪出隐藏的病毒进程">揪出隐藏的病毒进程</a><time datetime="2024-05-31T10:55:12.000Z" title="发表于 2024-05-31 18:55:12">2024-05-31</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2017 - 2024 By eber <a target="_blank" href="https://beian.miit.gov.cn" rel="external nofollow noreferrer">豫ICP备2021035851号-1</a></div><div class="footer_custom_text">本网站由 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral"><img src="https://blog.eber.vip/icon/upyun.png" align="absmiddle" width="59px" height="30px"></a> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cloudflare.com"><img src="https://blog.eber.vip/icon/cloudflare.svg" align="absmiddle" width="100px" height="30px"></a> 联合提供加速服务</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.8.1/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.8.1/js/main.min.js"></script><script src="https://unpkg.com/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><div class="js-pjax"><script>function getGiscusTheme () {
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+}
+
+function loadGiscus () {
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'Think-Me/Think-Me.github.io',
+    'data-repo-id': 'MDEwOlJlcG9zaXRvcnkyMTI5OTc2MjY=',
+    'data-category-id': 'DIC_kwDODLIV-s4Cghd6',
+    'data-mapping': 'pathname',
+    'data-theme': getGiscusTheme(),
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },{"data-mapping":"title","data-input-position":"top","data-loading":"lazy","data-reactions_enabled":1,"crossorigin":"anonymous","data-lang":"zh-CN","data-emit-metadata":0})
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame')
+    if (!iframe) return
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: getGiscusTheme()
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !true) {
+  if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script src="https://unpkg.com/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.8.1/js/search/local-search.min.js"></script></div></div></body></html>
